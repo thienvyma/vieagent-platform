@@ -1,0 +1,30 @@
+{
+  "checks": [
+    {
+      "name": "Main Application",
+      "url": "http://localhost:3000",
+      "interval": 60000,
+      "timeout": 10000,
+      "expectedStatus": 200
+    },
+    {
+      "name": "Health API",
+      "url": "http://localhost:3000/api/health",
+      "interval": 30000,
+      "timeout": 5000,
+      "expectedStatus": 200
+    },
+    {
+      "name": "Database Connection",
+      "type": "database",
+      "interval": 120000,
+      "timeout": 5000
+    }
+  ],
+  "notifications": {
+    "email": "admin@example.com",
+    "webhooks": []
+  },
+  "retries": 3,
+  "gracePeriod": 300000
+}

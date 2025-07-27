@@ -1,0 +1,51 @@
+{
+  "participants": [
+    {
+      "name": "Huyen Trang"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1720004585720,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Huyen Trang",
+      "timestamp_ms": 1720004577700,
+      "audio_files": [
+        {
+          "uri": "this_profile's_activity_across_facebook/messages/inbox/huyentrang_847394407445484/audio/audioclip17200045720004551_991673015612818.mp4",
+          "creation_timestamp": 1720004572
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1720004576821,
+      "content": "Hi Trang! Please let us know how we can help you.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1720004576219,
+      "content": "Huyen Trang \u00c4\u0091\u00c3\u00a3 tr\u00e1\u00ba\u00a3 l\u00e1\u00bb\u009di tin nh\u00e1\u00ba\u00afn ch\u00c3\u00a0o m\u00e1\u00bb\u00abng t\u00e1\u00bb\u00b1 \u00c4\u0091\u00e1\u00bb\u0099ng c\u00e1\u00bb\u00a7a b\u00e1\u00ba\u00a1n. \u00c4\u0090\u00e1\u00bb\u0083 thay \u00c4\u0091\u00e1\u00bb\u0095i ho\u00e1\u00ba\u00b7c g\u00e1\u00bb\u00a1 l\u00e1\u00bb\u009di ch\u00c3\u00a0o n\u00c3\u00a0y, h\u00c3\u00a3y truy c\u00e1\u00ba\u00adp ph\u00e1\u00ba\u00a7n C\u00c3\u00a0i \u00c4\u0091\u00e1\u00ba\u00b7t tin nh\u00e1\u00ba\u00afn.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Huyen Trang",
+  "is_still_participant": false,
+  "thread_path": "inbox/huyentrang_847394407445484",
+  "magic_words": [
+    
+  ]
+}

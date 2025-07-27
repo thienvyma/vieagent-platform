@@ -1,0 +1,204 @@
+{
+  "info": [
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council là tổ chức đào tạo Graphic Design chuyên sâu theo phương pháp Coaching 1:1, khai thác các lớp học đề cao tính phản biện, hướng đến thế hệ designer Việt Nam mới, được dẫn dắt bởi những artist và designer giàu kinh nghiệm thực hành.",
+      "services": [],
+      "FAQ": "",
+      "working_hours": "",
+      "contact_info": ""
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council offers BEI - Branding Essentials & Identity Design coaching 1:1. Mentorship, personalized curriculum, Design Thinking evaluation, and community engagement are key features.",
+      "services": [
+        {
+          "name": "BEI - Branding Essentials & Identity Design (Coaching 1:1)",
+          "price": "6,500,000đ (support installment), save up to 50% with package"
+        }
+      ],
+      "FAQ": "No FAQ available",
+      "working_hours": "Not specified",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn",
+        "email": "",
+        "phone": "",
+        "address": ""
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council is a platform that offers courses in Logo Design with a focus on Brand Identity Design. The courses are personalized and mentored 1:1 to ensure the progress and development of each student.",
+      "services": [
+        {
+          "service_name": "Logo Design (LD - Coaching 1:1)",
+          "price": "6,000,000đ (support installment)"
+        }
+      ],
+      "FAQ": [],
+      "working_hours": "Not specified",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn/bld-class",
+        "email": "",
+        "phone": "",
+        "address": ""
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council thường xuyên tổ chức Design Talk, tạo môi trường trao đổi về design, với định hướng khai thác những góc nhìn mới, phù hợp với bối cảnh Việt Nam.",
+      "services": [
+        {
+          "name": "Service Design - Cùng Quinny Vu bàn về Thiết Kế Trải Nghiệm Toàn Diện",
+          "description": "Service Design là lĩnh vực design mới nổi, phát triển dựa trên nhu cầu phục vụ chuyên sâu hơn trải nghiệm người dùng, mang đến hành trình tiếp xúc thương hiệu toàn diện, không chỉ gói gọn trong Visual Identity hoặc UI/UX. Service Design đang là xu hướng của Design thế giới và còn rất mới mẻ tại Việt Nam. Phát triển song song và được bổ trợ mật thiết bởi UI/UX Design và Business Design, Service Design sẽ được thảo luận chính tại buổi Talk lần này…",
+          "date": "Tháng 12/2023"
+        },
+        {
+          "name": "Type Talk (by) TDC (with) Huy Lê (and) Đông Trúc",
+          "description": "",
+          "date": "Thứ 7, ngày 07/10/23 - lúc 7:00PM (giờ VN)"
+        }
+      ],
+      "FAQ": null,
+      "working_hours": "Online",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn/design-talk",
+        "email": null,
+        "phone": null
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council là tổ chức đào tạo Graphic Design chuyên sâu theo phương pháp Coaching 1:1, khai thác các lớp học đề cao tính phản biện, hướng đến thế hệ designer Việt Nam mới, được dẫn dắt bởi những artist và designer giàu kinh nghiệm thực hành.",
+      "services": [],
+      "FAQ": null,
+      "working_hours": null,
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn",
+        "email": null,
+        "phone": null,
+        "address": null
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council is a platform for workshops and events focusing on branding design and creative concepts.",
+      "services": [
+        {
+          "name": "Kỹ Thuật Động Não trong Branding Design WSĐN",
+          "price": "265,000đ / Workshop"
+        }
+      ],
+      "FAQ": "No FAQ available",
+      "working_hours": "Not specified",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn",
+        "email": "",
+        "phone": "",
+        "address": ""
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "Vừa làm chuyên môn, vừa nghiên cứu, giảng dạy, chúng tôi đưa lời khuyên và cùng học viên theo đuổi những dự án lớn-nhỏ.",
+      "services": [
+        {
+          "name": "Branding",
+          "price": null
+        },
+        {
+          "name": "Operation",
+          "price": null
+        },
+        {
+          "name": "Creative, Visual Art",
+          "price": null
+        },
+        {
+          "name": "Type Design",
+          "price": null
+        },
+        {
+          "name": "Graphic, Visualization, Branding, Photography",
+          "price": null
+        },
+        {
+          "name": "Packaging Design, Printing & Chất liệu",
+          "price": null
+        },
+        {
+          "name": "Advertising, Digital Art",
+          "price": null
+        },
+        {
+          "name": "Color, Illustration",
+          "price": null
+        }
+      ],
+      "FAQ": null,
+      "working_hours": null,
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn/",
+        "email": null,
+        "phone": null,
+        "address": null
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council is a platform that offers classes and workshops on various design-related topics.",
+      "services": [
+        {
+          "name": "Lettering Art Basic (LAB)",
+          "description": "Lettering Art Basic (LAB) is a course that focuses on the art of lettering, a branch of Typography. Participants will learn the basics of creating type-related artwork and explore the world of lettering.",
+          "price": "6,500,000đ (support installment)"
+        }
+      ],
+      "FAQ": "FAQs are not available for this course.",
+      "working_hours": "The registration date will be updated soon.",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn",
+        "email": "",
+        "phone": ""
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council is a leading design education center in Vietnam, offering a wide range of courses in design and creativity.",
+      "services": [
+        {
+          "name": "Type Design Starter",
+          "status": "Chưa Khai giảng",
+          "fee": "8,500,000đ (hỗ trợ trả góp)"
+        }
+      ],
+      "FAQ": "FAQ information is not available",
+      "working_hours": "Working hours information is not available",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn",
+        "email": "",
+        "phone": "",
+        "address": ""
+      }
+    },
+    {
+      "company_name": "The Design Council",
+      "company_intro": "The Design Council is a leading design education center that offers courses in Typography Theory with a focus on 1:1 coaching.",
+      "services": [
+        {
+          "name": "Typography Theory (Coaching 1:1)",
+          "price": "5,400,000đ (support installment) - Save up to 50% if purchased in a package"
+        }
+      ],
+      "FAQ": "No FAQ available",
+      "working_hours": "Not specified",
+      "contact_info": {
+        "website": "https://www.thedesigncouncil.vn",
+        "email": "",
+        "phone": "",
+        "address": ""
+      }
+    }
+  ],
+  "links": []
+}

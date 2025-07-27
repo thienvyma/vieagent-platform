@@ -1,0 +1,9 @@
+question,answer
+"Công ty bạn làm gì?","Chúng tôi là một AI Agent Platform giúp các doanh nghiệp tạo và triển khai các AI assistants thông minh để tự động hóa customer support và business processes."
+"Có những plan nào?","Chúng tôi có 3 plans: FREE (5 agents, 1000 messages/tháng), PRO ($29/tháng, 50 agents, unlimited messages), ENTERPRISE (liên hệ để quote, unlimited mọi thứ)."
+"Làm sao để tạo agent?","Vào Dashboard > Agents > Tạo Agent Mới. Nhập tên, prompt, chọn model từ API keys, và thêm knowledge files nếu cần."
+"Hỗ trợ model nào?","Chúng tôi hỗ trợ OpenAI (GPT-3.5, GPT-4), Anthropic (Claude), và các local models. Bạn cần thêm API key của provider tương ứng."
+"Knowledge files là gì?","Knowledge files là các documents (CSV, PDF, DOCX, TXT, JSON) mà agent sử dụng để trả lời câu hỏi. Agent sẽ tìm kiếm thông tin liên quan trong files này."
+"Giá cả như thế nào?","Plan FREE miễn phí. Plan PRO $29/tháng. ENTERPRISE liên hệ sales. Chúng tôi cũng tính phí API calls based on usage."
+"Có hỗ trợ tiếng Việt không?","Có, platform hỗ trợ đầy đủ tiếng Việt. Agents có thể được train để trả lời bằng tiếng Việt."
+"Làm sao liên hệ support?","Email: support@aiagent.com hoặc chat với AI support agent trên website. Response time: < 2 hours trong giờ hành chính." 

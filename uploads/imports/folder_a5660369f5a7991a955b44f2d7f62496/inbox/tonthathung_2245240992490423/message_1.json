@@ -1,0 +1,46 @@
+{
+  "participants": [
+    {
+      "name": "T\u00c3\u00b4n Th\u00e1\u00ba\u00a5t H\u00c3\u00b9ng"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1729175486749,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n , l\u00e1\u00bb\u009bp Packaging s\u00e1\u00ba\u00bd \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c khai gi\u00e1\u00ba\u00a3ng v\u00c3\u00a0o th\u00c3\u00a1ng 12, b\u00e1\u00ba\u00a1n c\u00c3\u00b3 mu\u00e1\u00bb\u0091n \u00c4\u0091\u00c4\u0083ng k\u00c3\u00bd kh\u00c3\u00b4ng \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "T\u00c3\u00b4n Th\u00e1\u00ba\u00a5t H\u00c3\u00b9ng",
+      "timestamp_ms": 1729124756574,
+      "content": "G\u00e1\u00bb\u00adi cho t\u00c3\u00b4i \u00c6\u00b0u \u00c4\u0091\u00c3\u00a3i v\u00c3\u00a0 th\u00c3\u00b4ng tin m\u00e1\u00bb\u009bi.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1729124755723,
+      "content": "Ch\u00c3\u00a0o T\u00c3\u00b4n! Ch\u00c3\u00bang t\u00c3\u00b4i c\u00c3\u00b3 th\u00e1\u00bb\u0083 gi\u00c3\u00bap g\u00c3\u00ac cho b\u00e1\u00ba\u00a1n?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1729124755137,
+      "content": "T\u00c3\u00b4n Th\u00e1\u00ba\u00a5t H\u00c3\u00b9ng \u00c4\u0091\u00c3\u00a3 tr\u00e1\u00ba\u00a3 l\u00e1\u00bb\u009di tin nh\u00e1\u00ba\u00afn ch\u00c3\u00a0o m\u00e1\u00bb\u00abng t\u00e1\u00bb\u00b1 \u00c4\u0091\u00e1\u00bb\u0099ng c\u00e1\u00bb\u00a7a b\u00e1\u00ba\u00a1n. \u00c4\u0090\u00e1\u00bb\u0083 thay \u00c4\u0091\u00e1\u00bb\u0095i ho\u00e1\u00ba\u00b7c g\u00e1\u00bb\u00a1 l\u00e1\u00bb\u009di ch\u00c3\u00a0o n\u00c3\u00a0y, h\u00c3\u00a3y truy c\u00e1\u00ba\u00adp ph\u00e1\u00ba\u00a7n C\u00c3\u00a0i \u00c4\u0091\u00e1\u00ba\u00b7t tin nh\u00e1\u00ba\u00afn.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "T\u00c3\u00b4n Th\u00e1\u00ba\u00a5t H\u00c3\u00b9ng",
+  "is_still_participant": false,
+  "thread_path": "inbox/tonthathung_2245240992490423",
+  "magic_words": [
+    
+  ]
+}

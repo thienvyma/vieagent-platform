@@ -1,0 +1,37 @@
+# Vector Database Configuration Template
+# Copy this file to .env and fill in your actual values
+
+# ChromaDB Server Configuration
+CHROMADB_HOST=localhost
+CHROMADB_PORT=8000
+CHROMADB_AUTH_TOKEN=your_chromadb_token_here
+
+# Embedding Services API Keys
+OPENAI_API_KEY=your_openai_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# ChromaDB Storage Settings
+CHROMADB_PERSIST_PATH=./chromadb_data
+CHROMADB_COLLECTION_PREFIX=ai_agent_
+
+# Vector Configuration
+VECTOR_DIMENSIONS=1536
+VECTOR_DISTANCE_METRIC=cosine
+EMBEDDING_PROVIDER=openai
+EMBEDDING_MODEL=text-embedding-3-small
+
+# Cache Configuration
+ENABLE_EMBEDDING_CACHE=true
+EMBEDDING_CACHE_TTL=86400
+EMBEDDING_CACHE_MAX_SIZE=10000
+
+# Performance Settings
+CHROMADB_MAX_BATCH_SIZE=100
+CHROMADB_MAX_RETRIES=3
+CHROMADB_TIMEOUT=30000
+
+# Instructions:
+# 1. Copy this file to .env
+# 2. Replace placeholder values with actual API keys
+# 3. Adjust paths and settings as needed
+# 4. Ensure ChromaDB server is running on specified host:port 

@@ -1,0 +1,73 @@
+[
+  {
+    "question": "cho em xin thông tin lớp tên lớp",
+    "main_answer": "Mình gửi bạn thông tin chi tiết của lớp TÊN LỚP. Trong link bên dưới sẽ có đầy đủ thông tin về Học phí, Mentor và sơ bộ giáo trình. Bạn tham khảo qua nhé\nCopy link lớp từ web",
+    "variants": [
+      "Dạ không biết là bạn đã biết qua về hình thức học coaching 1-1 tại TDC chưa ạ? Mình hỗ trợ bạn thêm thông tin nhé."
+    ],
+    "note": "Sau mỗi khi gửi thông tin môn học, không bao giờ bỏ lửng câu trả lời của mình, phải có câu hỏi tiếp theo nếu khách chưa phản hồi thêm."
+  },
+  {
+    "question": "cho em hỏi về gói foundation",
+    "main_answer": "Dạ hiện tại gói Foundation đang có học phí là 12.500.000đ ạ\nKhi tham gia gói Foundation thì bạn sẽ được các quyền lợi như sau:\n- Học 3 lớp bất kì trong các lớp coaching 1-1 tại TDC\n- Được tham gia, truy cập vào các Design Workshop mà TDC khai giảng\n- Được truy cập tất cả những dữ liệu event của TDC\n- Quyền lợi đặc biệt: Được Mentor Nhatminh Phan – Founder TDC tư vấn portfolio/ nghề nghiệp ạ",
+    "variants": [],
+    "note": ""
+  },
+  {
+    "question": "cho em hỏi về gói enhance",
+    "main_answer": "Dạ hiện tại gói Enhance đang có học phí là 22.600.000đ ạ\nKhi tham gia gói Enhance thì bạn sẽ được các quyền lợi như sau:\n- Học 5 lớp bất kì trong các lớp coaching 1-1 tại TDC (Tặng thêm 1 môn total, tổng là 6 môn)\n- Được tham gia, truy cập vào các Design Workshop mà TDC khai giảng\n- Được truy cập tất cả dữ liệu event của TDC\n- Quyền lợi đặc biệt: Mentor Nhatminh Phan – Founder TDC tư vấn nghề nghiệp/portfolio",
+    "variants": [
+      "Việc đăng ký membership tại TDC là bạn đang được giảm đến 40% so với việc đăng ký từng lớp lẻ. Bạn có thể cân nhắc tham gia Membership 'TÊN GÓI' để tiện về mặt học phí nhé."
+    ],
+    "note": ""
+  },
+  {
+    "question": "cho em hỏi về gói comprehensive",
+    "main_answer": "Dạ hiện tại gói Comprehensive đang có học phí là 55.500.000đ ạ\nKhi tham gia gói Comprehensive thì bạn sẽ được các quyền lợi như sau:\n- Học 12 lớp bất kì trong các lớp coaching 1-1 tại TDC (tặng 3 môn mềm)",
+    "variants": [],
+    "note": ""
+  },
+   {
+    "question": "Em phân vân không biết chọn môn nào ad ơi",
+    "main_answer": "Dạ để có thể tư vấn đúng nhất cho bạn, bạn có thể chia sẻ cho TDC về định hướng của bạn được không ạ? Mong bạn không ngại ạ, vì TDC sẽ dựa trên đúng định hướng và nhu cầu của bạn để tư vấn lớp cho bạn ạ.",
+    "variants": ["Dạ để tư vấn kĩ hơn cho bạn, bạn cho mình xin sđt để bạn tư vấn viên bên mình có thể liên hệ tư vấn cho bạn nhé."],
+    "note": "Phải hỏi định hướng, nếu được thì xin sản phẩm bạn đã làm"
+  },
+    {
+    "question": "Dạ em chưa biết về Coaching 1-1, Ad hỗ trợ em với",
+    "main_answer": "Dạ mình thông tin đến bạn về lớp Coaching 1-1: Khi đăng ký lớp, bạn sẽ được coaching 1 buổi trước với Mentor để Mentor hướng dẫn bạn cách học qua các học liệu cũng như lộ trình môn học như thế nào và những điều trọng tâm cần lưu ý cho môn học. Sau đó, TDC sẽ cung cấp các học liệu là video bài giảng và cả học liệu chữ để bạn có thể học bất cứ lúc nào tùy theo thời gian của bạn, Trong quá trình học, làm bài tập bạn có thể book coaching với Mentor để mentor sửa bài trực tiếp cho bạn thông qua Google Meet , Mentor có thể theo sát được quá trình học để có thể phù hợp với công việc, định hướng của bạn ạ.Bạn sẽ có thể book coaching bất cứ lúc nào tuỳ vào thời gian rảnh của bạn trên lịch riêng của mentor ạ..",
+    "variants": ["Dạ không biết bạn đang quan tâm tới lớp học cụ thể nào tại TDC ạ? Mình hỗ trợ bạn nha."],
+    "note": "Dạ không biết bạn đang quan tâm tới lớp học cụ thể nào tại TDC ạ? Mình hỗ trợ bạn nha"
+  },
+   {
+    "question": "Cho tôi biết về hình thức coaching 1-1",
+    "main_answer": "Dạ mình thông tin đến bạn về lớp Coaching 1-1: Khi đăng ký lớp, bạn sẽ được coaching 1 buổi trước với Mentor để Mentor hướng dẫn bạn cách học qua các học liệu cũng như lộ trình môn học như thế nào và những điều trọng tâm cần lưu ý cho môn học. Sau đó, TDC sẽ cung cấp các học liệu là video bài giảng và cả học liệu chữ để bạn có thể học bất cứ lúc nào tùy theo thời gian của bạn, Trong quá trình học, làm bài tập bạn có thể book coaching với Mentor để mentor sửa bài trực tiếp cho bạn thông qua Google Meet , Mentor có thể theo sát được quá trình học để có thể phù hợp với công việc, định hướng của bạn ạ.Bạn sẽ có thể book coaching bất cứ lúc nào tuỳ vào thời gian rảnh của bạn trên lịch riêng của mentor ạ..",
+    "variants": ["Dạ không biết bạn đang quan tâm tới lớp học cụ thể nào tại TDC ạ? Mình hỗ trợ bạn nha."],
+    "note": "Dạ không biết bạn đang quan tâm tới lớp học cụ thể nào tại TDC ạ? Mình hỗ trợ bạn nha"
+  },
+  {
+    "question": "Là mình học qua video rồi khi nào cần Mentor mới sửa bài ?",
+    "main_answer": "Dạ bạn sẽ học qua học liệu là video bài giảng, tài liệu chữ do chính Mentor biên soạn. Sau mỗi buổi học như vậy thì bạn sẽ luôn có bài tập, bạn làm bài tập xong thì bạn có thể book coach để được sửa bài/ giải đáp câu hỏi trong quá trình học cho mình nhé..",
+    "variants": [""],
+    "note": ""
+  },
+   {
+    "question": "Cho hỏi về hình thức trả góp ?",
+    "main_answer": "Dạ TDC có chính sách trả góp 50% để bắt đầu tham gia khoá học, sau tối đa 1 tháng mình hoàn thành 50% học phí còn lại ạ. \nMình ví dụ cho bạn nhé\nKỳ hạn 1 - Ngày tháng năm: 6.250.000đ\nKỳ hạn 2 - Ngày tháng năm: 6.250.000đ",
+    "variants": [""],
+    "note": "Ví dụ về trả góp Foundation"
+  },
+    {
+    "question": "Cho hỏi về hình thức trả góp ?",
+    "main_answer": "Dạ TDC có chính sách trả góp 50% để bắt đầu tham gia khoá học, sau tối đa 1 tháng mình hoàn thành 50% học phí còn lại ạ. \nMình ví dụ cho bạn nhé\nKỳ hạn 1 - Ngày tháng năm: 11.300.000đ\nKỳ hạn 2 - Ngày tháng năm: 11.300.000đ",
+    "variants": [""],
+    "note": "Ví dụ về trả góp Foundation"
+  },
+  {
+    "question": "Cho hỏi về hình thức trả góp Comprehensive",
+    "main_answer": "Dạ đối với gói Comprehensive thì bạn được chia ra làm 4 lần trả góp nhé\nMình ví dụ cho bạn nhé\nKỳ hạn 1 - Ngày tháng năm: 13.875.000đ\nKỳ hạn 2 - Ngày tháng năm: 13.875.000đ\nKỳ hạn 3 - Ngày tháng năm: 13.875.000đ\nKỳ hạn 4 - Ngày tháng năm: 13.875.000đ",
+    "variants": [""],
+    "note": "Ví dụ về trả góp Foundation"
+  }
+  
+]

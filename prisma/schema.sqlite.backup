@@ -1,0 +1,1898 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  name                 String?
+  password             String?
+  role                 String                @default("USER")
+  plan                 String                @default("TRIAL")
+  isActive             Boolean               @default(true)
+  image                String?               // ✅ ADDED: User avatar/profile image
+  reputation           Int                   @default(0)  // ✅ ADDED: User reputation score for marketplace
+  verified             Boolean               @default(false)  // ✅ ADDED: User verification status
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  adminLogs            AdminLog[]
+  agents               Agent[]
+  aiAnalyticsJobs      AIAnalyticsJob[]
+  aiInsights           AIInsight[]
+  announcements        Announcement[]
+  bankTransfers        BankTransfer[]
+  blogs                Blog[]
+  contactSubmissions   ContactSubmission[]
+  conversations        Conversation[]
+  dataImports          DataImport[]
+  documents            Document[]
+  emailPreferences     EmailPreferences?
+  featuredContent      FeaturedContent[]
+  googleAccounts       GoogleAccount[]
+  googleCalendarEvents GoogleCalendarEvent[]
+  googleDocs           GoogleDoc[]
+  googleDriveFiles     GoogleDriveFile[]
+  googleEmails         GoogleEmail[]
+  googleForms          GoogleForm[]
+  googleSheets         GoogleSheet[]
+  planUpgradeRequests  PlanUpgradeRequest[]
+  platformConnections  PlatformConnection[]
+  subscriptions        Subscription[]
+  apiKeys              UserApiKey[]
+  feedbacks            UserFeedback[]
+  profile              UserProfile?
+  settings             UserSettings?
+  knowledge            Knowledge[]   @relation("UserKnowledge")
+  authoredTemplates    AgentTemplate[] @relation("AuthoredTemplates")
+  templateDownloads    TemplateDownload[] @relation("TemplateDownloads")
+  templateReviews      TemplateReview[] @relation("TemplateReviews")
+  templateStars        TemplateStar[] @relation("TemplateStars")
+  templateForks        TemplateFork[] @relation("TemplateForks")
+  templateCollections  TemplateCollection[] @relation("TemplateCollections")
+  reviewVotes          ReviewVote[] @relation("ReviewVotes")
+  marketplaceReports   MarketplaceReport[] @relation("MarketplaceReports")
+
+  @@map("users")
+}
+
+model UserProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  firstName String?
+  lastName  String?
+  company   String?
+  jobTitle  String?
+  phone     String?
+  avatar    String?
+  bio       String?
+  website   String?
+  location  String?
+  timezone  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model UserSettings {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  theme                String   @default("dark")
+  language             String   @default("vi")
+  timezone             String   @default("Asia/Ho_Chi_Minh")
+  emailNotifications   Boolean  @default(true)
+  browserNotifications Boolean  @default(false)
+  weeklyReport         Boolean  @default(true)
+  defaultModel         String   @default("gpt-3.5-turbo")
+  defaultTemperature   Float    @default(0.7)
+  defaultMaxTokens     Int      @default(1000)
+  profileVisible       Boolean  @default(false)
+  dataSharing          Boolean  @default(false)
+  analyticsOptIn       Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model UserFeedback {
+  id         String   @id @default(cuid())
+  userId     String
+  type       String
+  subject    String
+  message    String
+  rating     Int?
+  status     String   @default("open")
+  priority   String   @default("medium")
+  userAgent  String?
+  url        String?
+  screenshot String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_feedbacks")
+}
+
+model Agent {
+  id                      String                @id @default(cuid())
+  name                    String
+  description             String?
+  prompt                  String
+  model                   String                @default("gpt-3.5-turbo")
+  temperature             Float                 @default(0.7)
+  maxTokens               Int                   @default(1000)
+  status                  String                @default("ACTIVE")
+  isPublic                Boolean               @default(false)
+  userId                  String
+  knowledgeFiles          String?               @default("[]")
+  
+  // 🧠 DAY 23: Smart Knowledge Strategy Configuration
+  knowledgeStrategy       String                @default("AUTO")     // "AUTO", "SELECTIVE", "PRIORITY"
+  knowledgeStrategyConfig String?               @default("{}")       // JSON config for each strategy
+  knowledgeFilePriorities String?               @default("{}")       // JSON map of fileId -> priority weight
+  autoStrategySettings    String?               @default("{}")       // JSON config for auto strategy fallback logic
+  
+  messageDelayMs          Int?                  @default(2000)
+  enableSmartDelay        Boolean               @default(true)
+  maxDelayMs              Int?                  @default(8000)
+  minDelayMs              Int?                  @default(500)
+  enableVietnameseMode    Boolean               @default(true)
+  delaySettings           Json?
+  enableAutoHandover      Boolean               @default(false)
+  handoverTriggers        String?               @default("{}")
+  handoverThresholds      String?               @default("{}")
+  enableGoogleIntegration Boolean               @default(false)
+  googleServices          String?               @default("{}")
+  smartSchedulingDuration Int?                  @default(60)
+  modelProvider           String                @default("openai")
+  fallbackModel           String?
+  multiModelSupport       Boolean               @default(false)
+  enableRAG               Boolean               @default(false)
+  ragThreshold            Float                 @default(0.7)
+  ragMaxDocuments         Int                   @default(5)
+  ragSearchType           String                @default("SEMANTIC")
+  ragChunkSize            Int                   @default(500)
+  ragOverlapSize          Int                   @default(50)
+  enableAutoLearning      Boolean               @default(false)
+  learningMode            String                @default("PASSIVE")
+  learningThreshold       Float                 @default(0.8)
+  learningFeedbackWeight  Float                 @default(0.5)
+  learningRetentionDays   Int                   @default(30)
+  embeddingModel          String                @default("text-embedding-3-small")
+  embeddingDimensions     Int                   @default(1536)
+  vectorCollectionName    String?
+  responseTimeoutMs       Int                   @default(30000)
+  concurrentRequests      Int                   @default(5)
+  cacheTTL                Int                   @default(3600)
+  enableResponseCaching   Boolean               @default(true)
+  enableFunctionCalling   Boolean               @default(false)
+  availableFunctions      String                @default("[]")
+  contextWindowSize       Int                   @default(4096)
+  enableStreaming         Boolean               @default(false)
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations           Conversation[]
+  googleCalendarEvents    GoogleCalendarEvent[]
+  googleDocs              GoogleDoc[]
+  googleDriveFiles        GoogleDriveFile[]
+  googleEmails            GoogleEmail[]
+  googleForms             GoogleForm[]
+  googleSheets            GoogleSheet[]
+  deployments             VPSDeployment[]
+  knowledgeAssignments    KnowledgeAgentAssignment[] @relation("AgentKnowledge")
+  templateForks           TemplateFork[] @relation("TemplateForks")
+
+  @@map("agents")
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  title     String?
+  agentId   String
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agent     Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  role           String
+  content        String
+  conversationId String
+  tokens         Int?
+  cost           Float?
+  metadata       String?      // ✅ ADDED: For multi-provider chat metadata
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model VPSConnection {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  host        String
+  port        Int             @default(22)
+  username    String
+  password    String?
+  privateKey  String?
+  type        String          @default("VPS")
+  status      String          @default("DISCONNECTED")
+  lastChecked DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deployments VPSDeployment[]
+  monitoring  VPSMonitoring[]
+
+  @@map("vps_connections")
+}
+
+model VPSDeployment {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      String        @default("PENDING")
+  agentId     String?
+  vpsId       String
+  config      String?
+  logs        String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  vps         VPSConnection @relation(fields: [vpsId], references: [id], onDelete: Cascade)
+  agent       Agent?        @relation(fields: [agentId], references: [id])
+
+  @@map("vps_deployments")
+}
+
+model VPSMonitoring {
+  id         String        @id @default(cuid())
+  vpsId      String
+  cpuUsage   Float?
+  ramUsage   Float?
+  diskUsage  Float?
+  networkIn  Float?
+  networkOut Float?
+  uptime     Int?
+  timestamp  DateTime      @default(now())
+  vps        VPSConnection @relation(fields: [vpsId], references: [id], onDelete: Cascade)
+
+  @@map("vps_monitoring")
+}
+
+model ModelProviderConfig {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  provider  String
+  apiKey    String?
+  endpoint  String?
+  models    String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("model_providers")
+}
+
+model UserApiKey {
+  id           String    @id @default(cuid())
+  name         String
+  provider     String
+  keyHash      String
+  userId       String
+  isActive     Boolean   @default(true)
+  lastUsed     DateTime?
+  usageCount   Int       @default(0)
+  models       String?
+  rateLimit    Int?
+  monthlyUsage Float     @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_api_keys")
+}
+
+model Document {
+  id            String    @id @default(cuid())
+  title         String
+  filename      String
+  content       String?
+  type          String    @default("text")
+  size          Int?
+  mimeType      String?
+  encoding      String?
+  userId        String
+  status        String    @default("UPLOADED")
+  processedAt   DateTime?
+  errorMessage  String?
+  extractedText String?
+  metadata      String?
+  filePath      String?
+  s3Key         String?
+  viewCount     Int       @default(0)
+  lastViewed    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+model GlobalSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("string")
+  category  String   @default("general")
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("global_settings")
+}
+
+model DataImport {
+  id               String                 @id @default(cuid())
+  name             String
+  description      String?
+  source           String
+  status           String                 @default("PENDING")
+  userId           String
+  originalFile     String?
+  fileName         String?
+  fileSize         Int?
+  fileHash         String?
+  totalRecords     Int?
+  processedRecords Int?                   @default(0)
+  successRecords   Int?                   @default(0)
+  errorRecords     Int?                   @default(0)
+  progressPercent  Float?                 @default(0)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  errorMessage     String?
+  metadata         String?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analytics        ImportAnalytics[]
+  conversations    ImportedConversation[]
+
+  @@map("data_imports")
+}
+
+model ImportedConversation {
+  id               String            @id @default(cuid())
+  importId         String
+  originalId       String
+  platform         String
+  participantCount Int               @default(2)
+  title            String?
+  startTime        DateTime?
+  endTime          DateTime?
+  duration         Int?
+  messageCount     Int               @default(0)
+  isProcessed      Boolean           @default(false)
+  contextExtracted String?
+  sentiment        String?
+  category         String?
+  normalizedData   String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  import           DataImport        @relation(fields: [importId], references: [id], onDelete: Cascade)
+  messages         ImportedMessage[]
+
+  @@unique([importId, originalId])
+  @@map("imported_conversations")
+}
+
+model ImportedMessage {
+  id                String               @id @default(cuid())
+  conversationId    String
+  originalId        String
+  senderId          String?
+  senderName        String?
+  senderType        String?
+  content           String
+  messageType       String               @default("text")
+  attachments       String?
+  timestamp         DateTime
+  isProcessed       Boolean              @default(false)
+  sentiment         String?
+  intent            String?
+  entities          String?
+  normalizedContent String?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  conversation      ImportedConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, originalId])
+  @@map("imported_messages")
+}
+
+model ImportAnalytics {
+  id                    String     @id @default(cuid())
+  importId              String
+  date                  DateTime
+  hour                  Int?
+  conversationCount     Int        @default(0)
+  messageCount          Int        @default(0)
+  avgConversationLength Float      @default(0)
+  avgResponseTime       Float      @default(0)
+  positiveCount         Int        @default(0)
+  negativeCount         Int        @default(0)
+  neutralCount          Int        @default(0)
+  resolutionRate        Float      @default(0)
+  customerSatisfaction  Float      @default(0)
+  topTopics             String?
+  topIntents            String?
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  import                DataImport @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  @@unique([importId, date, hour])
+  @@map("import_analytics")
+}
+
+model GoogleAccount {
+  id             String                @id @default(cuid())
+  userId         String
+  googleId       String                @unique
+  email          String
+  name           String?
+  picture        String?
+  accessToken    String
+  refreshToken   String?
+  tokenExpiry    DateTime?
+  scopes         String
+  isActive       Boolean               @default(true)
+  lastSync       DateTime?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  user           User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calendarEvents GoogleCalendarEvent[]
+  docs           GoogleDoc[]
+  driveFiles     GoogleDriveFile[]
+  emails         GoogleEmail[]
+  forms          GoogleForm[]
+  sheets         GoogleSheet[]
+
+  @@map("google_accounts")
+}
+
+model PlatformConnection {
+  id             String    @id @default(cuid())
+  userId         String
+  platform       String
+  agentId        String?
+  accessToken    String
+  refreshToken   String?
+  tokenExpiry    DateTime?
+  platformUserId String?
+  platformData   String?
+  metadata       String?
+  scopes         String?
+  isActive       Boolean   @default(true)
+  lastSync       DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platform, agentId])
+  @@map("platform_connections")
+}
+
+model GoogleCalendarEvent {
+  id              String        @id @default(cuid())
+  userId          String
+  googleAccountId String
+  googleEventId   String        @unique
+  calendarId      String
+  summary         String
+  description     String?
+  location        String?
+  startTime       DateTime
+  endTime         DateTime
+  timezone        String?
+  isAllDay        Boolean       @default(false)
+  attendees       String?
+  organizer       String?
+  status          String        @default("confirmed")
+  visibility      String        @default("default")
+  agentId         String?
+  aiGenerated     Boolean       @default(false)
+  aiContext       String?
+  lastSync        DateTime      @default(now())
+  syncStatus      String        @default("synced")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  agent           Agent?        @relation(fields: [agentId], references: [id])
+  googleAccount   GoogleAccount @relation(fields: [googleAccountId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_calendar_events")
+}
+
+model GoogleEmail {
+  id              String        @id @default(cuid())
+  userId          String
+  googleAccountId String
+  googleMessageId String        @unique
+  threadId        String
+  labelIds        String
+  subject         String
+  fromEmail       String
+  fromName        String?
+  toEmails        String
+  ccEmails        String?
+  bccEmails       String?
+  bodyText        String?
+  bodyHtml        String?
+  attachments     String?
+  isRead          Boolean       @default(false)
+  isStarred       Boolean       @default(false)
+  importance      String        @default("normal")
+  agentId         String?
+  aiProcessed     Boolean       @default(false)
+  aiResponse      String?
+  aiSentiment     String?
+  aiUrgency       String?
+  googleDate      DateTime
+  lastSync        DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  agent           Agent?        @relation(fields: [agentId], references: [id])
+  googleAccount   GoogleAccount @relation(fields: [googleAccountId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_emails")
+}
+
+model GoogleSheet {
+  id              String           @id @default(cuid())
+  userId          String
+  googleAccountId String
+  googleSheetId   String           @unique
+  title           String
+  url             String
+  worksheets      String
+  range           String?
+  agentId         String?
+  aiGenerated     Boolean          @default(false)
+  purpose         String?
+  headers         String?
+  dataTypes       String?
+  lastSync        DateTime         @default(now())
+  syncStatus      String           @default("synced")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rows            GoogleSheetRow[]
+  agent           Agent?           @relation(fields: [agentId], references: [id])
+  googleAccount   GoogleAccount    @relation(fields: [googleAccountId], references: [id], onDelete: Cascade)
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_sheets")
+}
+
+model GoogleSheetRow {
+  id        String      @id @default(cuid())
+  sheetId   String
+  rowIndex  Int
+  values    String
+  aiContext String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  sheet     GoogleSheet @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+
+  @@unique([sheetId, rowIndex])
+  @@map("google_sheet_rows")
+}
+
+model GoogleDriveFile {
+  id                 String        @id @default(cuid())
+  userId             String
+  googleAccountId    String
+  googleFileId       String        @unique
+  name               String
+  mimeType           String
+  size               BigInt?
+  parentFolderId     String?
+  path               String?
+  starred            Boolean       @default(false)
+  trashed            Boolean       @default(false)
+  description        String?
+  iconLink           String?
+  thumbnailLink      String?
+  webViewLink        String?
+  webContentLink     String?
+  downloadUrl        String?
+  owners             String?
+  permissions        String?
+  shared             Boolean       @default(false)
+  agentId            String?
+  aiProcessed        Boolean       @default(false)
+  aiCategory         String?
+  aiTags             String?
+  aiSummary          String?
+  googleCreatedTime  DateTime?
+  googleModifiedTime DateTime?
+  lastSync           DateTime      @default(now())
+  syncStatus         String        @default("synced")
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  agent              Agent?        @relation(fields: [agentId], references: [id])
+  googleAccount      GoogleAccount @relation(fields: [googleAccountId], references: [id], onDelete: Cascade)
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_drive_files")
+}
+
+model GoogleDoc {
+  id                 String        @id @default(cuid())
+  userId             String
+  googleAccountId    String
+  googleDocId        String        @unique
+  title              String
+  url                String
+  content            String?
+  wordCount          Int?
+  language           String?
+  agentId            String?
+  aiGenerated        Boolean       @default(false)
+  purpose            String?
+  aiSummary          String?
+  aiKeywords         String?
+  aiCategory         String?
+  aiSentiment        String?
+  isTemplate         Boolean       @default(false)
+  templateType       String?
+  sourceEmail        String?
+  sourceCalendar     String?
+  autoUpdated        Boolean       @default(false)
+  googleCreatedTime  DateTime?
+  googleModifiedTime DateTime?
+  lastSync           DateTime      @default(now())
+  syncStatus         String        @default("synced")
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  agent              Agent?        @relation(fields: [agentId], references: [id])
+  googleAccount      GoogleAccount @relation(fields: [googleAccountId], references: [id], onDelete: Cascade)
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_docs")
+}
+
+model GoogleForm {
+  id                 String               @id @default(cuid())
+  userId             String
+  googleAccountId    String
+  googleFormId       String               @unique
+  formId             String?              // ✅ ADDED: Alias for googleFormId for backward compatibility
+  title              String
+  description        String?
+  url                String
+  settings           String?
+  questions          String?
+  isActive           Boolean              @default(true)
+  acceptingResponses Boolean              @default(true)
+  responseLimit      Int?
+  agentId            String?
+  aiGenerated        Boolean              @default(false)
+  purpose            String?
+  totalResponses     Int                  @default(0)
+  lastResponseAt     DateTime?
+  autoNotify         Boolean              @default(false)
+  notifyEmail        String?
+  autoSheet          String?
+  aiInsights         String?
+  responsePatterns   String?
+  googleCreatedTime  DateTime?
+  googleModifiedTime DateTime?
+  modifiedTime       DateTime?            // ✅ ADDED: Alias for googleModifiedTime for backward compatibility
+  lastSync           DateTime             @default(now())
+  syncStatus         String               @default("synced")
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  responses          GoogleFormResponse[]
+  agent              Agent?               @relation(fields: [agentId], references: [id])
+  googleAccount      GoogleAccount        @relation(fields: [googleAccountId], references: [id], onDelete: Cascade)
+  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_forms")
+}
+
+model GoogleFormResponse {
+  id               String     @id @default(cuid())
+  formId           String
+  googleResponseId String     @unique
+  respondentEmail  String?
+  responses        String
+  submittedAt      DateTime
+  isComplete       Boolean    @default(true)
+  aiProcessed      Boolean    @default(false)
+  aiSentiment      String?
+  aiCategory       String?
+  aiInsights       String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  form             GoogleForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  @@map("google_form_responses")
+}
+
+model AIAnalyticsJob {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  description  String?
+  type         String
+  dataSources  String
+  parameters   String?
+  status       String    @default("pending")
+  progress     Float     @default(0)
+  results      String?
+  insights     String?
+  isScheduled  Boolean   @default(false)
+  schedule     String?
+  nextRun      DateTime?
+  lastRun      DateTime?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  duration     Int?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ai_analytics_jobs")
+}
+
+model AIInsight {
+  id            String    @id @default(cuid())
+  userId        String
+  title         String
+  description   String
+  type          String
+  category      String
+  data          String
+  confidence    Float
+  priority      String    @default("medium")
+  dataSources   String
+  timeRange     String?
+  isActive      Boolean   @default(true)
+  isRead        Boolean   @default(false)
+  isDismissed   Boolean   @default(false)
+  actionTaken   String?
+  actionResults String?
+  validUntil    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ai_insights")
+}
+
+model Subscription {
+  id            String           @id @default(cuid())
+  userId        String
+  planId        String
+  status        String           @default("ACTIVE")
+  startDate     DateTime         @default(now())
+  endDate       DateTime?
+  autoRenew     Boolean          @default(true)
+  paymentStatus String           @default("PENDING")
+  amount        Float
+  currency      String           @default("USD")
+  paymentMethod String?
+  transactionId String?
+  currentUsage  Json?
+  limits        Json?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  plan          SubscriptionPlan @relation(fields: [planId], references: [id])
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model SubscriptionPlan {
+  id                      String         @id @default(cuid())
+  name                    String         @unique
+  description             String?
+  price                   Float
+  currency                String         @default("USD")
+  interval                String         @default("month")
+  maxAgents               Int            @default(1)
+  maxConversations        Int            @default(1000)
+  maxStorage              Int            @default(1)
+  maxApiCalls             Int            @default(10000)
+  enableGoogleIntegration Boolean        @default(false)
+  enableHandoverSystem    Boolean        @default(false)
+  enableAnalytics         Boolean        @default(false)
+  enableCustomBranding    Boolean        @default(false)
+  enablePrioritySupport   Boolean        @default(false)
+  isActive                Boolean        @default(true)
+  isPopular               Boolean        @default(false)
+  sortOrder               Int            @default(0)
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+  bankTransfers           BankTransfer[]
+  subscriptions           Subscription[]
+
+  @@map("subscription_plans")
+}
+
+model Blog {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  content         String
+  excerpt         String?
+  featuredImage   String?
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  status          String    @default("DRAFT")
+  publishedAt     DateTime?
+  isFeatured      Boolean   @default(false)
+  authorId        String
+  categories      String?
+  tags            String?
+  viewCount       Int       @default(0)
+  likeCount       Int       @default(0)
+  commentCount    Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  author          User      @relation(fields: [authorId], references: [id])
+
+  @@map("blogs")
+}
+
+model BankTransfer {
+  id                String           @id @default(cuid())
+  userId            String
+  planId            String
+  amount            Float
+  currency          String           @default("USD")
+  bankName          String
+  accountNumber     String
+  accountHolder     String
+  transferDate      DateTime
+  transferReference String?
+  notes             String?
+  status            String           @default("PENDING")
+  verifiedBy        String?
+  verifiedAt        DateTime?
+  rejectionReason   String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  plan              SubscriptionPlan @relation(fields: [planId], references: [id])
+  user              User             @relation(fields: [userId], references: [id])
+
+  @@map("bank_transfers")
+}
+
+model SystemSettings {
+  id                         String   @id @default(cuid())
+  smtpHost                   String?
+  smtpPort                   Int?
+  smtpUser                   String?
+  smtpPassword               String?
+  smtpFromEmail              String?
+  smtpFromName               String?
+  stripePublicKey            String?
+  stripeSecretKey            String?
+  stripeWebhookSecret        String?
+  paypalClientId             String?
+  paypalClientSecret         String?
+  openaiApiKey               String?
+  anthropicApiKey            String?
+  maxApiCallsPerUser         Int      @default(10000)
+  siteName                   String   @default("AI Agent Platform")
+  siteDescription            String?
+  logoUrl                    String?
+  maintenanceMode            Boolean  @default(false)
+  registrationEnabled        Boolean  @default(true)
+  emailNotificationsEnabled  Boolean  @default(true)
+  slackWebhookUrl            String?
+  discordWebhookUrl          String?
+  bankTransferTemplateActive Boolean  @default(false)
+  bankName                   String?
+  accountName                String?
+  accountNumber              String?
+  bankBranch                 String?
+  qrCodeImageUrl             String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model Announcement {
+  id           String    @id @default(cuid())
+  title        String
+  content      String
+  type         String    @default("INFO")
+  isActive     Boolean   @default(true)
+  isGlobal     Boolean   @default(false)
+  targetUsers  String?
+  startDate    DateTime?
+  endDate      DateTime?
+  priority     Int       @default(0)
+  authorId     String
+  viewCount    Int       @default(0)
+  dismissCount Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  author       User      @relation(fields: [authorId], references: [id])
+
+  @@map("announcements")
+}
+
+model AdminLog {
+  id          String   @id @default(cuid())
+  adminId     String
+  action      String
+  resource    String
+  resourceId  String?
+  description String?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  admin       User     @relation(fields: [adminId], references: [id])
+
+  @@map("admin_logs")
+}
+
+model SystemMetrics {
+  id                  String   @id @default(cuid())
+  date                DateTime @default(now())
+  totalUsers          Int      @default(0)
+  activeUsers         Int      @default(0)
+  newUsers            Int      @default(0)
+  totalAgents         Int      @default(0)
+  activeAgents        Int      @default(0)
+  totalConversations  Int      @default(0)
+  totalRevenue        Float    @default(0)
+  activeSubscriptions Int      @default(0)
+  avgResponseTime     Float    @default(0)
+  errorRate           Float    @default(0)
+  uptime              Float    @default(100)
+  totalStorage        Float    @default(0)
+  storageUsed         Float    @default(0)
+  createdAt           DateTime @default(now())
+
+  @@map("system_metrics")
+}
+
+model PlanUpgradeRequest {
+  id              String    @id @default(cuid())
+  userId          String
+  currentPlan     String
+  targetPlan      String
+  reason          String
+  status          String    @default("PENDING")
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  reviewNotes     String?
+  rejectionReason String?
+  approvedBy      String?
+  approvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("plan_upgrade_requests")
+}
+
+model EmailPreferences {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  marketing     Boolean  @default(true)
+  notifications Boolean  @default(true)
+  security      Boolean  @default(true)
+  updates       Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_preferences")
+}
+
+model Newsletter {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  isActive       Boolean   @default(true)
+  source         String    @default("landing")
+  tags           String?
+  name           String?
+  company        String?
+  interests      String?
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+  openCount      Int       @default(0)
+  clickCount     Int       @default(0)
+  lastOpened     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("newsletters")
+}
+
+model ContactSubmission {
+  id           String    @id @default(cuid())
+  name         String
+  email        String
+  company      String?
+  subject      String
+  message      String
+  inquiryType  String    @default("general")
+  phone        String?
+  website      String?
+  status       String    @default("NEW")
+  priority     String    @default("MEDIUM")
+  assignedTo   String?
+  response     String?
+  respondedAt  DateTime?
+  respondedBy  String?
+  source       String    @default("contact_form")
+  userAgent    String?
+  ipAddress    String?
+  referer      String?
+  followUpDate DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  assignee     User?     @relation(fields: [assignedTo], references: [id])
+
+  @@map("contact_submissions")
+}
+
+model FeaturedContent {
+  id          String    @id @default(cuid())
+  title       String
+  excerpt     String?
+  content     String?
+  type        String
+  category    String?
+  isActive    Boolean   @default(true)
+  isFeatured  Boolean   @default(false)
+  position    Int       @default(0)
+  tags        String?
+  author      String?
+  authorImage String?
+  url         String?
+  image       String?
+  thumbnail   String?
+  viewCount   Int       @default(0)
+  clickCount  Int       @default(0)
+  startDate   DateTime?
+  endDate     DateTime?
+  publishedAt DateTime  @default(now())
+  createdBy   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  creator     User?     @relation(fields: [createdBy], references: [id])
+
+  @@map("featured_content")
+}
+
+model LandingPageStats {
+  id                 String   @id @default(cuid())
+  date               DateTime @unique @default(now())
+  landingViews       Int      @default(0)
+  pricingViews       Int      @default(0)
+  blogViews          Int      @default(0)
+  contactViews       Int      @default(0)
+  newsletterSignups  Int      @default(0)
+  contactSubmissions Int      @default(0)
+  trialSignups       Int      @default(0)
+  planSelections     Int      @default(0)
+  averageSessionTime Float    @default(0)
+  bounceRate         Float    @default(0)
+  organicTraffic     Int      @default(0)
+  directTraffic      Int      @default(0)
+  referralTraffic    Int      @default(0)
+  socialTraffic      Int      @default(0)
+  createdAt          DateTime @default(now())
+
+  @@map("landing_page_stats")
+}
+
+// =============================================================================
+// UNIFIED KNOWLEDGE CENTER MODELS
+// =============================================================================
+
+model Knowledge {
+  id               String    @id @default(cuid())
+  
+  // Basic Information
+  title            String
+  description      String?
+  filename         String
+  
+  // Classification
+  type             String    // "document", "conversation", "folder"
+  subtype          String?   // "pdf", "json", "facebook", "whatsapp", "csv", "txt", etc.
+  source           String?   // "facebook", "whatsapp", "telegram", "upload", "manual"
+  contentType      String?   // "faq", "product_catalog", "business_info", "text_knowledge"
+  category         String?   // "training", "reference", "conversation", "analytics"
+  
+  // File Information
+  size             Int?
+  mimeType         String?
+  encoding         String?
+  fileHash         String?   // For deduplication
+  filePath         String?
+  s3Key            String?
+  originalFile     String?   // Path to original file
+  
+  // Processing Status
+  status           String    @default("PENDING")
+  processedAt      DateTime?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  errorMessage     String?
+  
+  // Content Storage
+  content          String?   // Parsed structured content (JSON)
+  extractedText    String?   // Raw text extraction
+  rawContent       String?   // Original raw content
+  
+  // Progress Tracking (for batch/folder processing)
+  totalRecords     Int?
+  processedRecords Int?      @default(0)
+  successRecords   Int?      @default(0)
+  errorRecords     Int?      @default(0)
+  progressPercent  Float?    @default(0)
+  
+  // Analytics & Usage
+  viewCount        Int       @default(0)
+  lastViewed       DateTime?
+  downloadCount    Int       @default(0)
+  shareCount       Int       @default(0)
+  
+  // Hierarchy & Relationships
+  parentId         String?   // For folder structure
+  depth            Int       @default(0)
+  path             String?   // Full path for nested structures
+  
+  // Ownership & Access
+  userId           String
+  isPublic         Boolean   @default(false)
+  isArchived       Boolean   @default(false)
+  isDeleted        Boolean   @default(false)
+  
+  // Metadata & Configuration
+  metadata         String?   // Rich metadata JSON
+  processingConfig String?   // Processing configuration
+  tags             String?   // Tags for organization (JSON array)
+  
+  // Migration Fields (for backward compatibility)
+  legacyDataImportId String? // Original DataImport ID
+  legacyDocumentId   String? // Original Document ID
+  migrationDate      DateTime? // When this record was migrated
+  
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  // Relations
+  user             User      @relation("UserKnowledge", fields: [userId], references: [id], onDelete: Cascade)
+  parent           Knowledge? @relation("KnowledgeHierarchy", fields: [parentId], references: [id])
+  children         Knowledge[] @relation("KnowledgeHierarchy")
+  
+  // Analytics & Insights
+  analytics        KnowledgeAnalytics[]
+  insights         KnowledgeInsight[]
+  
+  // Agent Integration
+  agentAssignments KnowledgeAgentAssignment[]
+  
+  // Processing History
+  processingHistory KnowledgeProcessingHistory[]
+  
+  // Sharing & Collaboration
+  shares           KnowledgeShare[]
+  
+  // Indexing for search
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([parentId])
+  @@index([fileHash])
+  @@index([createdAt])
+  @@index([legacyDataImportId])
+  @@index([legacyDocumentId])
+  
+  @@map("knowledge")
+}
+
+model KnowledgeAnalytics {
+  id            String    @id @default(cuid())
+  knowledgeId   String
+  eventType     String    // "view", "download", "share", "process", "error"
+  eventData     String?   // JSON data for event
+  ipAddress     String?
+  userAgent     String?
+  timestamp     DateTime  @default(now())
+  
+  knowledge     Knowledge @relation(fields: [knowledgeId], references: [id], onDelete: Cascade)
+  
+  @@index([knowledgeId])
+  @@index([eventType])
+  @@index([timestamp])
+  
+  @@map("knowledge_analytics")
+}
+
+model KnowledgeInsight {
+  id            String    @id @default(cuid())
+  knowledgeId   String
+  insightType   String    // "sentiment", "category", "keywords", "summary"
+  insightData   String    // JSON data for insight
+  confidence    Float?
+  generatedAt   DateTime  @default(now())
+  
+  knowledge     Knowledge @relation(fields: [knowledgeId], references: [id], onDelete: Cascade)
+  
+  @@index([knowledgeId])
+  @@index([insightType])
+  
+  @@map("knowledge_insights")
+}
+
+model KnowledgeAgentAssignment {
+  id          String    @id @default(cuid())
+  knowledgeId String
+  agentId     String
+  priority    Int       @default(1)
+  isActive    Boolean   @default(true)
+  assignedAt  DateTime  @default(now())
+  
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id], onDelete: Cascade)
+  agent       Agent     @relation("AgentKnowledge", fields: [agentId], references: [id], onDelete: Cascade)
+  
+  @@unique([knowledgeId, agentId])
+  @@index([knowledgeId])
+  @@index([agentId])
+  
+  @@map("knowledge_agent_assignments")
+}
+
+model KnowledgeProcessingHistory {
+  id          String    @id @default(cuid())
+  knowledgeId String
+  operation   String    // "upload", "parse", "process", "reprocess", "migrate"
+  status      String    // "started", "completed", "failed"
+  details     String?   // JSON details
+  duration    Int?      // Processing duration in ms
+  timestamp   DateTime  @default(now())
+  
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id], onDelete: Cascade)
+  
+  @@index([knowledgeId])
+  @@index([operation])
+  @@index([timestamp])
+  
+  @@map("knowledge_processing_history")
+}
+
+model KnowledgeShare {
+  id          String    @id @default(cuid())
+  knowledgeId String
+  shareType   String    // "public", "agent", "user", "link"
+  shareWith   String?   // Agent ID, User ID, or public link
+  permissions String    // "read", "write", "admin"
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  
+  knowledge   Knowledge @relation(fields: [knowledgeId], references: [id], onDelete: Cascade)
+  
+  @@index([knowledgeId])
+  @@index([shareType])
+  
+  @@map("knowledge_shares")
+}
+
+model KnowledgeMigration {
+  id                String    @id @default(cuid())
+  batchId           String    // Migration batch identifier
+  migrationDate     DateTime  @default(now())
+  sourceTable       String    // "data_imports" or "documents"
+  sourceId          String    // Original record ID
+  targetId          String    // New Knowledge ID
+  migrationStatus   String    // "pending", "completed", "failed"
+  migrationData     String?   // JSON migration details
+  errorMessage      String?
+  
+  @@index([batchId])
+  @@index([sourceTable])
+  @@index([sourceId])
+  @@index([targetId])
+  
+  @@map("knowledge_migrations")
+}
+
+// =============================================================================
+// MARKETPLACE SCHEMA EXTENSION - DAY 28 Step 28.4
+// =============================================================================
+
+model AgentTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String   // Removed @db.Text for SQLite compatibility
+  category    String
+  tags        String   // Changed String[] to String for JSON storage in SQLite
+  
+  // Author information
+  authorId    String
+  author      User     @relation("AuthoredTemplates", fields: [authorId], references: [id])
+  
+  // Template configuration
+  configuration Json   // Complete agent configuration
+  preview       Json?  // Preview data (examples, use cases, etc.)
+  
+  // Version control
+  version       String  @default("1.0.0")
+  changelog     String? // Removed @db.Text for SQLite compatibility
+  
+  // Status and visibility
+  status        TemplateStatus @default(DRAFT)
+  visibility    TemplateVisibility @default(PUBLIC)
+  
+  // Statistics
+  downloads     Int     @default(0)
+  stars         Int     @default(0)
+  averageRating Float   @default(0)
+  reviewCount   Int     @default(0)
+  
+  // Flags
+  featured      Boolean @default(false)
+  premium       Boolean @default(false)
+  verified      Boolean @default(false)
+  
+  // Relationships
+  downloads_rel TemplateDownload[]
+  reviews       TemplateReview[]
+  stars_rel     TemplateStar[]
+  versions      TemplateVersion[]
+  forks         TemplateFork[]
+  collections   TemplateCollectionItem[]
+  reports       MarketplaceReport[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("agent_templates")
+}
+
+model TemplateVersion {
+  id          String   @id @default(cuid())
+  templateId  String
+  template    AgentTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  version     String
+  releaseDate DateTime @default(now())
+  changelog   String   // Removed @db.Text for SQLite compatibility
+  configuration Json   // Configuration for this version
+  
+  downloads   Int      @default(0)
+  deprecated  Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  
+  @@map("template_versions")
+}
+
+model TemplateDownload {
+  id         String   @id @default(cuid())
+  templateId String
+  template   AgentTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  userId     String
+  user       User     @relation("TemplateDownloads", fields: [userId], references: [id])
+  
+  version    String   // Version downloaded
+  userAgent  String?  // Browser/client info
+  ipAddress  String?  // For analytics
+  
+  downloadedAt DateTime @default(now())
+  createdAt    DateTime @default(now())  // ✅ ADDED: For marketplace analytics
+  
+  @@map("template_downloads")
+}
+
+model TemplateReview {
+  id         String   @id @default(cuid())
+  templateId String
+  template   AgentTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  userId     String
+  user       User     @relation("TemplateReviews", fields: [userId], references: [id])
+  
+  rating     Int      // 1-5 stars
+  comment    String   // Removed @db.Text for SQLite compatibility
+  
+  // Moderation
+  status     ReviewStatus @default(PUBLISHED)
+  anonymous  Boolean  @default(false)
+  verified   Boolean  @default(false) // Verified purchase/download
+  
+  // Engagement
+  helpfulVotes ReviewVote[]
+  reports      MarketplaceReport[]
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@unique([userId, templateId])
+  @@map("template_reviews")
+}
+
+model ReviewVote {
+  id       String   @id @default(cuid())
+  reviewId String
+  review   TemplateReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  
+  userId   String
+  user     User     @relation("ReviewVotes", fields: [userId], references: [id])
+  
+  helpful  Boolean  // true = helpful, false = not helpful
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, reviewId])
+  @@map("review_votes")
+}
+
+model TemplateStar {
+  id         String   @id @default(cuid())
+  templateId String
+  template   AgentTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  userId     String
+  user       User     @relation("TemplateStars", fields: [userId], references: [id])
+  
+  starredAt  DateTime @default(now())
+  
+  @@unique([userId, templateId])
+  @@map("template_stars")
+}
+
+model TemplateFork {
+  id               String   @id @default(cuid())
+  originalTemplateId String
+  originalTemplate AgentTemplate @relation(fields: [originalTemplateId], references: [id])
+  
+  forkedAgentId    String   @unique
+  forkedAgent      Agent    @relation("TemplateForks", fields: [forkedAgentId], references: [id])
+  
+  userId           String
+  user             User     @relation("TemplateForks", fields: [userId], references: [id])
+  
+  createdAt        DateTime @default(now())
+  
+  @@map("template_forks")
+}
+
+model TemplateCollection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  // Removed @db.Text for SQLite compatibility
+  
+  userId      String
+  user        User     @relation("TemplateCollections", fields: [userId], references: [id])
+  
+  templates   TemplateCollectionItem[]
+  
+  visibility  CollectionVisibility @default(PRIVATE)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("template_collections")
+}
+
+model TemplateCollectionItem {
+  id           String   @id @default(cuid())
+  collectionId String
+  collection   TemplateCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  
+  templateId   String
+  template     AgentTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  order        Int      @default(0)
+  addedAt      DateTime @default(now())
+  
+  @@unique([collectionId, templateId])
+  @@map("template_collection_items")
+}
+
+model MarketplaceReport {
+  id         String   @id @default(cuid())
+  templateId String?
+  template   AgentTemplate? @relation(fields: [templateId], references: [id])
+  
+  reviewId   String?
+  review     TemplateReview? @relation(fields: [reviewId], references: [id])
+  
+  reporterId String
+  reporter   User     @relation("MarketplaceReports", fields: [reporterId], references: [id])
+  
+  reason     ReportReason
+  description String?  // Removed @db.Text for SQLite compatibility
+  
+  // Moderation
+  moderatorNotes String? // Removed @db.Text for SQLite compatibility
+  status         ReportStatus @default(PENDING)
+  moderatedBy    String?
+  moderatedAt    DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("marketplace_reports")
+}
+
+// =============================================================================
+// MARKETPLACE ENUMS
+// =============================================================================
+
+enum TemplateStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  REJECTED
+}
+
+enum TemplateVisibility {
+  PUBLIC
+  PRIVATE
+  COMMUNITY
+}
+
+enum ReviewStatus {
+  PUBLISHED
+  PENDING
+  REJECTED
+  FLAGGED
+}
+
+enum CollectionVisibility {
+  PUBLIC
+  PRIVATE
+  SHARED
+}
+
+enum ReportReason {
+  INAPPROPRIATE_CONTENT
+  SPAM
+  COPYRIGHT_VIOLATION
+  MALICIOUS_CODE
+  MISLEADING_INFORMATION
+  HARASSMENT
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  INVESTIGATING
+  RESOLVED
+  DISMISSED
+}
+
+// =============================================================================
+// PERFORMANCE & ANALYTICS MODELS - Missing Models Fix
+// =============================================================================
+
+model PerformanceMetric {
+  id                  String   @id @default(cuid())
+  timestamp           DateTime @default(now())
+  
+  // Model info
+  provider            String
+  model               String
+  
+  // Performance metrics
+  responseTime        Int      // milliseconds
+  firstTokenTime      Int?     // milliseconds (for streaming)
+  tokensPerSecond     Float?
+  
+  // Quality metrics
+  qualityScore        Float    // 0-1
+  relevanceScore      Float    // 0-1
+  coherenceScore      Float    // 0-1
+  accuracyScore       Float    // 0-1
+  
+  // Usage metrics
+  promptTokens        Int
+  completionTokens    Int
+  totalTokens         Int
+  
+  // Cost metrics
+  cost                Float
+  costPerToken        Float
+  
+  // Context
+  userId              String
+  agentId             String
+  conversationId      String?
+  messageComplexity   String   // 'simple' | 'medium' | 'complex' | 'expert'
+  
+  // Success metrics
+  success             Boolean
+  errorType           String?
+  errorMessage        String?
+  
+  // User feedback
+  userRating          Int?     // 1-5
+  userFeedback        String?
+  
+  // Metadata
+  metadata            String   // JSON metadata
+  
+  createdAt           DateTime @default(now())
+  
+  @@index([provider])
+  @@index([model])
+  @@index([userId])
+  @@index([agentId])
+  @@index([timestamp])
+  
+  @@map("performance_metrics")
+}
+
+model ABTest {
+  id                  String   @id @default(cuid())
+  name                String
+  description         String
+  startDate           DateTime
+  endDate             DateTime
+  status              String   // 'draft' | 'running' | 'completed' | 'paused'
+  
+  // Configuration
+  trafficAllocation   String   // JSON
+  controlGroup        String   // JSON
+  testGroups          String   // JSON
+  primaryMetric       String
+  secondaryMetrics    String   // JSON array
+  targeting           String   // JSON
+  results             String?  // JSON results
+  
+  // Relations
+  testResults         ABTestResult[]
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  @@map("ab_tests")
+}
+
+model ABTestResult {
+  id                  String   @id @default(cuid())
+  testId              String
+  test                ABTest   @relation(fields: [testId], references: [id], onDelete: Cascade)
+  
+  userId              String
+  agentId             String
+  testGroup           String
+  provider            String
+  model               String
+  responseTime        Int
+  qualityScore        Float
+  cost                Float
+  success             Boolean
+  userRating          Int?
+  timestamp           DateTime @default(now())
+  
+  @@index([testId])
+  @@index([userId])
+  @@index([timestamp])
+  
+  @@map("ab_test_results")
+}
+
+model ServiceMetrics {
+  id                  String   @id @default(cuid())
+  userId              String
+  serviceName         String
+  timestamp           DateTime @default(now())
+  
+  // Request metrics
+  requestCount        Int      @default(0)
+  successCount        Int      @default(0)
+  errorCount          Int      @default(0)
+  responseTime        Int      @default(0)
+  
+  // Data metrics
+  dataProcessed       BigInt?  @default(0)
+  apiCalls            Int?     @default(0)
+  
+  // Additional metrics
+  metadata            String?  // JSON for additional data
+  
+  @@index([userId])
+  @@index([serviceName])
+  @@index([timestamp])
+  
+  @@map("service_metrics")
+}
+
+model IntegrationInsights {
+  id                  String   @id @default(cuid())
+  userId              String
+  period              String   // 'daily' | 'weekly' | 'monthly'
+  startDate           DateTime
+  endDate             DateTime
+  
+  // Analytics data (stored as JSON)
+  serviceUsage        String   // JSON
+  healthMetrics       String   // JSON
+  userEngagement      String   // JSON
+  businessImpact      String   // JSON
+  recommendations     String   // JSON
+  trends              String   // JSON
+  alerts              String   // JSON
+  
+  createdAt           DateTime @default(now())
+  
+  @@index([userId])
+  @@index([period])
+  @@index([startDate])
+  
+  @@map("integration_insights")
+}
+
+model IntegrationAlerts {
+  id                  String   @id @default(cuid())
+  userId              String
+  serviceName         String?
+  alertType           String   // 'warning' | 'error' | 'info'
+  message             String
+  resolved            Boolean  @default(false)
+  timestamp           DateTime @default(now())
+  
+  // Additional context
+  metadata            String?  // JSON
+  
+  @@index([userId])
+  @@index([resolved])
+  @@index([timestamp])
+  
+  @@map("integration_alerts")
+}
+
+// =============================================================================
+// MISSING MODELS - Fix TypeScript Errors
+// =============================================================================
+
+model AgentMetric {
+  id                  String   @id @default(cuid())
+  agentId             String
+  userId              String
+  timestamp           DateTime @default(now())
+  
+  // Metrics
+  responseTime        Int
+  successRate         Float
+  errorRate           Float
+  totalRequests       Int
+  tokensUsed          Int
+  cost                Float
+  
+  // Metadata
+  metadata            String?  // JSON
+  
+  createdAt           DateTime @default(now())
+  
+  @@index([agentId])
+  @@index([userId])
+  @@index([timestamp])
+  
+  @@map("agent_metrics")
+}
+
+model BulkOperation {
+  id                  String   @id @default(cuid())
+  userId              String
+  operationType       String   // 'import' | 'export' | 'delete' | 'update'
+  status              String   @default("pending")
+  totalItems          Int
+  processedItems      Int      @default(0)
+  successItems        Int      @default(0)
+  errorItems          Int      @default(0)
+  
+  // Progress tracking
+  progress            Float    @default(0)
+  startedAt           DateTime?
+  completedAt         DateTime?
+  
+  // Results
+  results             String?  // JSON results
+  errors              String?  // JSON errors
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  
+  @@map("bulk_operations")
+}
+
+model AgentUsageEvent {
+  id                  String   @id @default(cuid())
+  agentId             String
+  userId              String
+  eventType           String   // 'chat' | 'creation' | 'modification' | 'deletion'
+  timestamp           DateTime @default(now())
+  
+  // Event details
+  details             String?  // JSON
+  duration            Int?     // milliseconds
+  tokensUsed          Int?
+  cost                Float?
+  
+  @@index([agentId])
+  @@index([userId])
+  @@index([timestamp])
+  
+  @@map("agent_usage_events")
+}
+
+model RecommendationAction {
+  id                  String   @id @default(cuid())
+  userId              String
+  agentId             String?
+  recommendationType  String
+  action              String
+  status              String   @default("pending")
+  
+  // Recommendation details
+  title               String
+  description         String
+  priority            String   @default("medium")
+  
+  // Execution
+  executedAt          DateTime?
+  results             String?  // JSON
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  
+  @@map("recommendation_actions")
+}
+
+model AgentWizardConfig {
+  id                  String   @id @default(cuid())
+  userId              String
+  configName          String
+  configData          String   // JSON configuration
+  isDefault           Boolean  @default(false)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  @@index([userId])
+  
+  @@map("agent_wizard_configs")
+}

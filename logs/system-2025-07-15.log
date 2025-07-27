@@ -1,0 +1,3 @@
+{"timestamp":"2025-07-15T16:00:03.449Z","level":"info","category":"system","message":"Log management test - info level","metadata":{"test":true,"component":"log-api"}}
+{"timestamp":"2025-07-15T16:00:03.449Z","level":"warn","category":"system","message":"Log management test - warning level","metadata":{"test":true,"component":"log-api"}}
+{"timestamp":"2025-07-15T16:00:03.449Z","level":"error","category":"system","message":"Log management test - error level (simulated)","metadata":{"test":true,"component":"log-api","simulated":true}}

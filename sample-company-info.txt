@@ -1,0 +1,63 @@
+THÔNG TIN CÔNG TY AI AGENT PLATFORM
+
+==== GIỚI THIỆU CHUNG ====
+
+AI Agent Platform là nền tảng dẫn đầu về việc tạo và triển khai các AI assistants thông minh cho doanh nghiệp. Chúng tôi giúp các công ty tự động hóa customer support, sales process, và business operations thông qua các AI agents được customized.
+
+==== SẢN PHẨM & DỊCH VỤ ====
+
+1. Agent Creation Tools:
+   - Drag & drop agent builder
+   - Custom prompt configuration  
+   - Multi-model support (OpenAI, Anthropic, Local)
+   - Knowledge base integration
+
+2. Deployment Options:
+   - Cloud hosting (SaaS)
+   - On-premise deployment
+   - VPS integration
+   - API endpoints
+
+3. Analytics & Monitoring:
+   - Real-time conversation tracking
+   - Performance metrics
+   - Cost analytics
+   - User behavior insights
+
+==== PRICING ====
+
+FREE Plan:
+- 5 AI agents
+- 1,000 messages/tháng
+- Basic analytics
+- Community support
+
+PRO Plan ($29/tháng):
+- 50 AI agents
+- Unlimited messages
+- Advanced analytics
+- Email support
+- Custom integrations
+
+ENTERPRISE Plan:
+- Unlimited agents
+- Dedicated infrastructure
+- 24/7 support
+- Custom development
+- SLA guarantee
+
+==== TEAM ====
+
+CEO: Nguyễn Văn A - Former AI Director tại FPT Software
+CTO: Trần Thị B - Ex-Google AI Engineer  
+Head of Product: Lê Văn C - 10+ years product management
+
+==== LIÊN HỆ ====
+
+Địa chỉ: 123 Đường Láng, Đống Đa, Hà Nội
+Email: info@aiagent.com
+Phone: +84 24 1234 5678
+Website: https://aiagent.com
+
+Support 24/7: support@aiagent.com
+Sales: sales@aiagent.com 

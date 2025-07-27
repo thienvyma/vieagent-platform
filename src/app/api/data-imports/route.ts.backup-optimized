@@ -1,0 +1,926 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { PrismaClient } from '@prisma/client'
+import { FacebookParser } from '@/lib/parsers/facebook-parser'
+import { InboxParser } from '@/lib/parsers/inbox-parser'
+import { writeFile, readFile, mkdir, readdir, copyFile } from 'fs/promises'
+import { join, dirname, basename } from 'path'
+import { randomBytes } from 'crypto'
+
+const prisma = new PrismaClient()
+
+export async function GET() {
+  try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const imports = await prisma.dataImport.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        _count: {
+          select: {
+            conversations: true,
+            analytics: true
+          }
+        }
+      }
+    })
+
+    return NextResponse.json(imports)
+  } catch (error) {
+    console.error('Error fetching data imports:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const formData = await request.formData()
+    const uploadType = formData.get('uploadType') as string || 'file'
+    const name = formData.get('name') as string
+    const description = formData.get('description') as string || ''
+    const source = formData.get('source') as string || 'FACEBOOK'
+
+    if (!name) {
+      return NextResponse.json({ error: 'Import name is required' }, { status: 400 })
+    }
+
+    let files: File[] = []
+    let filePaths: string[] = []
+
+    if (uploadType === 'file') {
+      const file = formData.get('file') as File
+      if (!file) {
+        return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+      }
+      files = [file]
+      filePaths = [file.name]
+    } else if (uploadType === 'folder') {
+      const folderFiles = formData.getAll('folder_files') as File[]
+      if (!folderFiles || folderFiles.length === 0) {
+        return NextResponse.json({ error: 'No folder files provided' }, { status: 400 })
+      }
+      
+      files = folderFiles
+      // Get file paths
+      for (let i = 0; i < folderFiles.length; i++) {
+        const pathKey = `folder_paths_${i}`
+        const path = formData.get(pathKey) as string
+        filePaths.push(path || folderFiles[i].name)
+      }
+    } else {
+      return NextResponse.json({ error: 'Invalid upload type' }, { status: 400 })
+    }
+
+    // Validate file types and sizes
+    const allowedTypes = ['application/json', 'application/zip', 'text/plain', 'text/csv']
+    const allowedExtensions = ['.json', '.txt', '.csv', '.zip']
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    
+    // Filter and validate files
+    const validFiles: File[] = []
+    const invalidFiles: string[] = []
+    
+    for (const file of files) {
+      const fileExtension = file.name.toLowerCase().slice(file.name.lastIndexOf('.'))
+      const isValidType = allowedTypes.includes(file.type) || allowedExtensions.includes(fileExtension)
+      
+      if (!isValidType) {
+        invalidFiles.push(file.name)
+        continue // Skip invalid files instead of throwing error
+      }
+      
+      if (file.size > maxSize) {
+        return NextResponse.json({ 
+          error: `File ${file.name} too large. Maximum size is 50MB.` 
+        }, { status: 400 })
+      }
+      
+      validFiles.push(file)
+    }
+    
+    // Log filtering results
+    console.log(`📁 File validation:`)
+    console.log(`- Total files: ${files.length}`)
+    console.log(`- Valid files: ${validFiles.length}`)
+    console.log(`- Invalid files: ${invalidFiles.length}`)
+    
+    if (validFiles.length === 0) {
+      return NextResponse.json({ 
+        error: `No valid conversation files found. Please upload JSON, TXT, CSV, or ZIP files.` 
+      }, { status: 400 })
+    }
+    
+    // Update files array to only include valid files
+    files = validFiles
+    
+    // Filter file paths to match valid files only
+    if (uploadType === 'folder') {
+      const validFilePaths: string[] = []
+      for (let i = 0; i < validFiles.length; i++) {
+        const validFile = validFiles[i]
+        // Find corresponding path from original files array
+        const originalIndex = Array.from(formData.getAll('folder_files')).findIndex((f: any) => 
+          f.name === validFile.name && f.size === validFile.size
+        )
+        if (originalIndex >= 0) {
+          const pathKey = `folder_paths_${originalIndex}`
+          const path = formData.get(pathKey) as string
+          validFilePaths.push(path || validFile.name)
+        } else {
+          validFilePaths.push(validFile.name)
+        }
+      }
+      filePaths = validFilePaths
+    }
+
+    // Create uploads directory if it doesn't exist
+    const uploadsDir = join(process.cwd(), 'uploads', 'imports')
+    try {
+      await mkdir(uploadsDir, { recursive: true })
+    } catch (error) {
+      // Directory might already exist
+    }
+
+    // For folder uploads, create a unique folder
+    const importId = randomBytes(16).toString('hex')
+    let savedFilePaths: string[] = []
+    let combinedBuffer: Buffer
+    let totalSize = 0
+
+    if (uploadType === 'folder') {
+      // Create a subfolder for this import
+      const importFolder = join(uploadsDir, `folder_${importId}`)
+      await mkdir(importFolder, { recursive: true })
+      
+      // Save all files and create a combined buffer for hash
+      const buffers: Buffer[] = []
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const filePath = filePaths[i]
+        const relativePath = filePath.replace(/\\/g, '/') // Normalize path separators
+        
+        // Create subdirectories if needed
+        const fileDir = join(importFolder, relativePath.split('/').slice(0, -1).join('/'))
+        if (fileDir !== importFolder) {
+          await mkdir(fileDir, { recursive: true })
+        }
+        
+        const fullPath = join(importFolder, relativePath)
+        const bytes = await file.arrayBuffer()
+        const buffer = Buffer.from(bytes)
+        
+        await writeFile(fullPath, buffer)
+        savedFilePaths.push(fullPath)
+        buffers.push(buffer)
+        totalSize += file.size
+      }
+      
+      // Combine all buffers for hash calculation
+      combinedBuffer = Buffer.concat(buffers)
+    } else {
+      // Single file processing
+      const file = files[0]
+      const fileExtension = file.name.split('.').pop()
+      const uniqueFilename = `import_${importId}.${fileExtension}`
+      const filePath = join(uploadsDir, uniqueFilename)
+      
+      const bytes = await file.arrayBuffer()
+      combinedBuffer = Buffer.from(bytes)
+      await writeFile(filePath, combinedBuffer)
+      savedFilePaths = [filePath]
+      totalSize = file.size
+    }
+
+    // Calculate file hash for duplicate detection
+    const crypto = require('crypto')
+    const fileHash = crypto.createHash('md5').update(combinedBuffer).digest('hex')
+
+    // Check for duplicate
+    const existingImport = await prisma.dataImport.findFirst({
+      where: {
+        userId: user.id,
+        fileHash
+      }
+    })
+
+    if (existingImport) {
+      return NextResponse.json({ 
+        error: 'This file has already been imported',
+        existingImport: existingImport.id
+      }, { status: 409 })
+    }
+
+    // Create data import record
+    const dataImport = await prisma.dataImport.create({
+      data: {
+        name,
+        description,
+        source: source as any,
+        userId: user.id,
+        originalFile: savedFilePaths[0], // Primary file path
+        fileName: uploadType === 'folder' ? `folder_${importId}` : files[0].name,
+        fileSize: totalSize,
+        fileHash,
+        status: 'PENDING',
+        // Store additional metadata for folder uploads
+        metadata: uploadType === 'folder' ? JSON.stringify({
+          uploadType: 'folder',
+          totalFiles: files.length,
+          filePaths: savedFilePaths,
+          originalPaths: filePaths
+        }) : JSON.stringify({ uploadType: 'file' })
+      }
+    })
+
+    // Start processing in background
+    processImportInBackground(dataImport.id)
+
+    return NextResponse.json(dataImport, { status: 201 })
+  } catch (error) {
+    console.error('Error creating data import:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+// Background processing function
+async function processImportInBackground(importId: string) {
+  try {
+    console.log(`🚀 Starting optimized background processing for import ${importId}`)
+    
+    // Update status to processing
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: {
+        status: 'PROCESSING',
+        startedAt: new Date(),
+        progressPercent: 0
+      }
+    })
+
+    const dataImport = await prisma.dataImport.findUnique({
+      where: { id: importId },
+      include: { user: true }
+    })
+
+    if (!dataImport || !dataImport.originalFile) {
+      throw new Error('Import or file not found')
+    }
+
+    // PHASE 1: Gom tất cả file JSON về 1 folder chung và gộp thành 1 file
+    console.log(`📁 PHASE 1: Collecting and merging JSON files...`)
+    const mergedJsonPath = await collectAndMergeJsonFiles(importId, dataImport)
+    
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: { progressPercent: 25 }
+    })
+    console.log(`✅ PHASE 1 completed: JSON files merged → ${mergedJsonPath}`)
+
+    // PHASE 2: Chuyển đổi font chữ thành tiếng Việt
+    console.log(`🔤 PHASE 2: Converting to Vietnamese font...`)
+    const vietnameseFontPath = await convertToVietnameseFont(mergedJsonPath)
+    
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: { progressPercent: 50 }
+    })
+    console.log(`✅ PHASE 2 completed: Vietnamese font conversion → ${vietnameseFontPath}`)
+
+    // PHASE 3: Parse conversations từ file đã convert
+    console.log(`💬 PHASE 3: Parsing conversations...`)
+    const conversations = await parseConversationsFromMergedFile(vietnameseFontPath, dataImport.source)
+    
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: { 
+        progressPercent: 75,
+        totalRecords: conversations.length
+      }
+    })
+    console.log(`✅ PHASE 3 completed: ${conversations.length} conversations parsed`)
+
+    // PHASE 4: Process conversations và lưu vào database
+    console.log(`💾 PHASE 4: Processing ${conversations.length} conversations...`)
+    let processedCount = 0
+    let successCount = 0
+    let errorCount = 0
+
+    // Process each conversation
+    for (let i = 0; i < conversations.length; i++) {
+      try {
+        const conv = conversations[i]
+        
+        // Extract context
+        const context = FacebookParser.extractContext(conv)
+        
+        // Create imported conversation
+        const importedConv = await prisma.importedConversation.create({
+          data: {
+            importId,
+            originalId: conv.originalId,
+            platform: conv.platform,
+            participantCount: conv.participantCount,
+            title: conv.title,
+            startTime: conv.startTime,
+            endTime: conv.endTime,
+            duration: conv.duration,
+            messageCount: conv.messageCount,
+            isProcessed: true,
+            contextExtracted: context.summary,
+            sentiment: context.sentiment,
+            category: context.category,
+            normalizedData: JSON.stringify(conv)
+          }
+        })
+
+        // Create imported messages
+        for (const msg of conv.messages) {
+          await prisma.importedMessage.create({
+            data: {
+              conversationId: importedConv.id,
+              originalId: msg.originalId,
+              senderId: msg.senderId,
+              senderName: msg.senderName,
+              senderType: msg.senderType,
+              content: msg.content,
+              messageType: msg.messageType,
+              attachments: msg.attachments,
+              timestamp: msg.timestamp,
+              isProcessed: true,
+              normalizedContent: msg.content
+            }
+          })
+        }
+
+        successCount++
+        processedCount++
+
+        // Update progress (75% - 90%)
+        const progress = Math.round(75 + ((i + 1) / conversations.length) * 15)
+        await prisma.dataImport.update({
+          where: { id: importId },
+          data: {
+            processedRecords: processedCount,
+            successRecords: successCount,
+            progressPercent: progress
+          }
+        })
+
+      } catch (error) {
+        console.error(`Error processing conversation ${i}:`, error)
+        errorCount++
+        processedCount++
+      }
+    }
+    console.log(`✅ PHASE 4 completed: ${successCount} conversations processed successfully`)
+
+    // PHASE 5: Generate analytics và convert to RAG format
+    console.log(`📊 PHASE 5: Generating analytics and RAG documents...`)
+    await generateAnalytics(importId)
+    await convertToRAGKnowledgeBase(importId, dataImport)
+    
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: {
+        progressPercent: 95
+      }
+    })
+    console.log(`✅ PHASE 5 completed: Analytics and RAG documents created`)
+
+    // PHASE 6: Mark as completed
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: {
+        status: 'COMPLETED',
+        completedAt: new Date(),
+        processedRecords: processedCount,
+        successRecords: successCount,
+        errorRecords: errorCount,
+        totalRecords: conversations.length,
+        progressPercent: 100
+      }
+    })
+
+    console.log(`🎉 Import ${importId} completed successfully! ${successCount}/${conversations.length} conversations processed`)
+
+  } catch (error) {
+    console.error(`Error processing import ${importId}:`, error)
+    
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: {
+        status: 'FAILED',
+        completedAt: new Date(),
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      }
+    })
+  }
+}
+
+// NEW: Convert conversations to RAG-compatible knowledge base format
+async function convertToRAGKnowledgeBase(importId: string, dataImport: any) {
+  try {
+    console.log(`Converting import ${importId} to RAG knowledge base format...`)
+
+    // Get all imported conversations
+    const conversations = await prisma.importedConversation.findMany({
+      where: { importId },
+      include: { messages: true }
+    })
+
+    console.log(`📊 Found ${conversations.length} conversations for RAG conversion`)
+
+    if (conversations.length === 0) {
+      // Create a document with debug info
+      const debugContent = [
+        '# Import Debug Information',
+        `Import ID: ${importId}`,
+        `Generated at: ${new Date().toISOString()}`,
+        '',
+        '⚠️ No conversations found in database.',
+        'This could indicate:',
+        '1. Parsing failed during import process',
+        '2. No valid JSON files in uploaded folder', 
+        '3. JSON files do not contain expected conversation structure',
+        '',
+        'Please check the original files and try again.'
+      ].join('\n')
+
+      await prisma.document.create({
+        data: {
+          title: `Import Debug - ${new Date().toLocaleDateString('vi-VN')}`,
+          filename: `import_${importId}_debug.txt`,
+          type: 'text',
+          size: Buffer.byteLength(debugContent, 'utf8'),
+          mimeType: 'text/plain',
+          userId: dataImport.userId,
+          status: 'PROCESSED',
+          filePath: `debug_${importId}.txt`,
+          content: debugContent,
+          processedAt: new Date()
+        }
+      })
+      
+      return
+    }
+
+    // Build RAG content in JSON format
+    const ragData: any = {
+      metadata: {
+        import_id: importId,
+        generated_at: new Date().toISOString(),
+        total_conversations: conversations.length,
+        source: 'facebook_messenger',
+        version: '1.0'
+      },
+      conversations: [],
+      tags: new Set<string>(),
+      related_documents: []
+    }
+
+    // Process each conversation
+    for (const conv of conversations) {
+      const messages = conv.messages.sort((a, b) => 
+        a.timestamp.getTime() - b.timestamp.getTime()
+      )
+
+      // Extract Q&A pairs and conversation flow
+      const qaPairs: any[] = []
+      const conversationHistory: any[] = []
+      let lastUserMessage: any = null
+      
+      for (const msg of messages) {
+        // Add to conversation history
+        conversationHistory.push({
+          sender: msg.senderName,
+          sender_type: msg.senderType,
+          content: msg.content,
+          timestamp: msg.timestamp.toISOString(),
+          message_type: msg.messageType
+        })
+
+        // Extract Q&A pairs
+        if (msg.senderType === 'user') {
+          lastUserMessage = msg
+        } else if (msg.senderType === 'business' && lastUserMessage) {
+          qaPairs.push({
+            question: lastUserMessage.content,
+            answer: msg.content,
+            question_timestamp: lastUserMessage.timestamp.toISOString(),
+            answer_timestamp: msg.timestamp.toISOString()
+          })
+          lastUserMessage = null
+        }
+      }
+
+      // Extract topics and tags
+      const topics = extractTopicsFromConversation(conv)
+      topics.forEach(topic => ragData.tags.add(topic))
+
+      // Create conversation object
+      const conversationData = {
+        id: conv.originalId,
+        title: conv.title || `Conversation ${conv.originalId}`,
+        summary: conv.contextExtracted || generateConversationSummary(conversationHistory),
+        category: conv.category || 'general',
+        sentiment: conv.sentiment || 'neutral',
+        participant_count: conv.participantCount,
+        message_count: conv.messageCount,
+        duration_minutes: conv.duration || 0,
+        start_time: conv.startTime?.toISOString(),
+        end_time: conv.endTime?.toISOString(),
+        conversation_history: conversationHistory,
+        qa_pairs: qaPairs,
+        topics: topics,
+        metadata: {
+          platform: conv.platform,
+          original_id: conv.originalId,
+          processed_at: new Date().toISOString()
+        }
+      }
+
+      ragData.conversations.push(conversationData)
+    }
+
+    // Convert tags set to array
+    ragData.tags = Array.from(ragData.tags)
+
+    // Add summary statistics
+    ragData.summary = {
+      total_messages: conversations.reduce((sum, c) => sum + c.messageCount, 0),
+      total_qa_pairs: ragData.conversations.reduce((sum: number, c: any) => sum + c.qa_pairs.length, 0),
+      most_common_topics: ragData.tags.slice(0, 10),
+      date_range: {
+        start: conversations.reduce((earliest, c) => 
+          !earliest || (c.startTime && c.startTime < earliest) ? c.startTime : earliest, null as Date | null),
+        end: conversations.reduce((latest, c) => 
+          !latest || (c.endTime && c.endTime > latest) ? c.endTime : latest, null as Date | null)
+      }
+    }
+
+    // Create JSON document
+    const jsonContent = JSON.stringify(ragData, null, 2)
+    
+    const document = await prisma.document.create({
+      data: {
+        title: `Conversations RAG - ${new Date().toLocaleDateString('vi-VN')}`,
+        filename: `import_${importId}_rag.json`,
+        type: 'json',
+        size: Buffer.byteLength(jsonContent, 'utf8'),
+        mimeType: 'application/json',
+        userId: dataImport.userId,
+        status: 'PROCESSED',
+        filePath: `rag_${importId}.json`,
+        content: jsonContent,
+        processedAt: new Date()
+      }
+    })
+
+    console.log(`✅ Created RAG knowledge base document: ${document.id}`)
+    console.log(`📊 RAG Summary: ${ragData.conversations.length} conversations, ${ragData.summary.total_messages} messages, ${ragData.summary.total_qa_pairs} Q&A pairs`)
+    
+    // Link to import record
+    await prisma.dataImport.update({
+      where: { id: importId },
+      data: {
+        metadata: JSON.stringify({
+          ...JSON.parse(dataImport.metadata || '{}'),
+          ragDocumentId: document.id,
+          ragSummary: {
+            conversations: ragData.conversations.length,
+            messages: ragData.summary.total_messages,
+            qaPairs: ragData.summary.total_qa_pairs,
+            topics: ragData.tags.length
+          }
+        })
+      }
+    })
+
+  } catch (error) {
+    console.error('Error converting to RAG format:', error)
+    // Don't fail the entire import if RAG conversion fails
+  }
+}
+
+// Helper function to generate conversation summary
+function generateConversationSummary(conversationHistory: any[]): string {
+  if (conversationHistory.length === 0) return 'No messages in conversation'
+  
+  const messageCount = conversationHistory.length
+  const participants = new Set(conversationHistory.map(m => m.sender))
+  const firstMessage = conversationHistory[0]
+  const lastMessage = conversationHistory[conversationHistory.length - 1]
+  
+  // Extract key themes from first few messages
+  const firstFewMessages = conversationHistory.slice(0, 5)
+    .map(m => m.content)
+    .join(' ')
+    .toLowerCase()
+  
+  let theme = 'general inquiry'
+  if (firstFewMessages.includes('sản phẩm') || firstFewMessages.includes('mua')) {
+    theme = 'product inquiry'
+  } else if (firstFewMessages.includes('hỗ trợ') || firstFewMessages.includes('giúp')) {
+    theme = 'support request'
+  } else if (firstFewMessages.includes('đơn hàng') || firstFewMessages.includes('order')) {
+    theme = 'order inquiry'
+  }
+  
+  return `${theme.charAt(0).toUpperCase() + theme.slice(1)} với ${participants.size} người tham gia, ${messageCount} tin nhắn. Bắt đầu: "${firstMessage.content.substring(0, 50)}..."`
+}
+
+// Helper function to extract topics
+function extractTopicsFromConversation(conv: any): string[] {
+  const topics = new Set<string>()
+  
+  // Extract from category
+  if (conv.category) topics.add(conv.category)
+  
+  // Extract from messages
+  const allText = conv.messages.map((m: any) => m.content).join(' ').toLowerCase()
+  
+  // Simple keyword extraction (can be enhanced)
+  const topicKeywords = {
+    'product': ['sản phẩm', 'mua', 'giá', 'ship', 'giao hàng'],
+    'support': ['hỗ trợ', 'giúp', 'lỗi', 'sửa', 'không được'],
+    'order': ['đơn hàng', 'đặt hàng', 'thanh toán', 'mã đơn'],
+    'complaint': ['phàn nàn', 'không hài lòng', 'tệ', 'chậm'],
+    'inquiry': ['hỏi', 'thắc mắc', 'cho mình', 'được không']
+  }
+  
+  for (const [topic, keywords] of Object.entries(topicKeywords)) {
+    if (keywords.some(kw => allText.includes(kw))) {
+      topics.add(topic)
+    }
+  }
+  
+  return Array.from(topics)
+}
+
+// Generate analytics from imported data
+async function generateAnalytics(importId: string) {
+  try {
+    const conversations = await prisma.importedConversation.findMany({
+      where: { importId },
+      include: {
+        messages: true
+      }
+    })
+
+    // Group by date
+    const analyticsMap = new Map<string, any>()
+
+    for (const conv of conversations) {
+      if (!conv.startTime) continue
+
+      const dateKey = conv.startTime.toISOString().split('T')[0]
+      
+      if (!analyticsMap.has(dateKey)) {
+        analyticsMap.set(dateKey, {
+          date: new Date(dateKey),
+          conversationCount: 0,
+          messageCount: 0,
+          avgConversationLength: 0,
+          avgResponseTime: 0,
+          positiveCount: 0,
+          negativeCount: 0,
+          neutralCount: 0,
+          resolutionRate: 0,
+          customerSatisfaction: 0,
+          topTopics: [],
+          topIntents: []
+        })
+      }
+
+      const analytics = analyticsMap.get(dateKey)
+      analytics.conversationCount++
+      analytics.messageCount += conv.messageCount
+
+      // Sentiment counting
+      if (conv.sentiment === 'positive') analytics.positiveCount++
+      else if (conv.sentiment === 'negative') analytics.negativeCount++
+      else analytics.neutralCount++
+    }
+
+    // Save analytics
+    for (const [dateKey, analytics] of analyticsMap) {
+      await prisma.importAnalytics.create({
+        data: {
+          importId,
+          date: analytics.date,
+          conversationCount: analytics.conversationCount,
+          messageCount: analytics.messageCount,
+          avgConversationLength: analytics.messageCount / analytics.conversationCount,
+          positiveCount: analytics.positiveCount,
+          negativeCount: analytics.negativeCount,
+          neutralCount: analytics.neutralCount,
+          resolutionRate: 85, // Mock value
+          customerSatisfaction: 4.2 // Mock value
+        }
+      })
+    }
+
+  } catch (error) {
+    console.error('Error generating analytics:', error)
+  }
+}
+
+// PHASE 1: Gom tất cả file JSON về 1 folder chung và gộp thành 1 file
+async function collectAndMergeJsonFiles(importId: string, dataImport: any): Promise<string> {
+  try {
+    const metadata = dataImport.metadata ? JSON.parse(dataImport.metadata) : { uploadType: 'file' }
+    const mergedData: any[] = []
+    
+    if (metadata.uploadType === 'folder') {
+      const filePaths = metadata.filePaths || []
+      console.log(`📁 Merging ${filePaths.length} JSON files...`)
+      
+      for (const filePath of filePaths) {
+        try {
+          const fileContent = await readFile(filePath, 'utf-8')
+          const jsonData = JSON.parse(fileContent)
+          
+          // Nếu là array thì spread, nếu là object thì push
+          if (Array.isArray(jsonData)) {
+            mergedData.push(...jsonData)
+          } else {
+            mergedData.push(jsonData)
+          }
+          console.log(`✅ Merged: ${basename(filePath)} (${Array.isArray(jsonData) ? jsonData.length : 1} items)`)
+        } catch (error) {
+          console.warn(`⚠️ Failed to merge file: ${filePath}`, error)
+        }
+      }
+    } else {
+      // Single file
+      const fileContent = await readFile(dataImport.originalFile, 'utf-8')
+      const jsonData = JSON.parse(fileContent)
+      mergedData.push(jsonData)
+    }
+    
+    // Tạo file merged
+    const mergedDir = join(process.cwd(), 'uploads', 'merged')
+    await mkdir(mergedDir, { recursive: true })
+    
+    const mergedFilePath = join(mergedDir, `merged_${importId}.json`)
+    await writeFile(mergedFilePath, JSON.stringify(mergedData, null, 2), 'utf-8')
+    
+    console.log(`📄 Merged file created: ${mergedFilePath} (${mergedData.length} total items)`)
+    return mergedFilePath
+  } catch (error) {
+    console.error('Error in collectAndMergeJsonFiles:', error)
+    throw error
+  }
+}
+
+// PHASE 2: Chuyển đổi font chữ thành tiếng Việt
+async function convertToVietnameseFont(mergedJsonPath: string): Promise<string> {
+  try {
+    console.log(`🔤 Converting font encoding to Vietnamese...`)
+    
+    const content = await readFile(mergedJsonPath, 'utf-8')
+    let jsonData = JSON.parse(content)
+    
+    // Function để convert encoding
+    const convertVietnameseText = (text: string): string => {
+      if (!text || typeof text !== 'string') return text
+      
+             // Map các ký tự encoding phổ biến sang tiếng Việt
+       const encodingMap: { [key: string]: string } = {
+         // Basic Vietnamese characters
+         'Ã¡': 'á',
+         'Ã ': 'à', 
+         'Ã£': 'ã',
+         'Ã©': 'é',
+         'Ã¨': 'è',
+         'Ã­': 'í',
+         'Ã¬': 'ì',
+         'Ã³': 'ó',
+         'Ã²': 'ò',
+         'Ãµ': 'õ',
+         'Ãº': 'ú',
+         'Ã¹': 'ù',
+         'Ã½': 'ý',
+         // Common words
+         'nÃ y': 'này',
+         'mÃ¬nh': 'mình',
+         'thÃ¬': 'thì',
+         'cÃ³': 'có',
+         'lÃ ': 'là'
+       }
+      
+      let convertedText = text
+      
+      // Apply encoding conversions
+      for (const [encoded, vietnamese] of Object.entries(encodingMap)) {
+        convertedText = convertedText.replace(new RegExp(encoded, 'g'), vietnamese)
+      }
+      
+      // Additional cleanup for common patterns
+      convertedText = convertedText
+        .replace(/Ã¡/g, 'á')
+        .replace(/Ã©/g, 'é')
+        .replace(/Ã­/g, 'í')
+        .replace(/Ã³/g, 'ó')
+        .replace(/Ãº/g, 'ú')
+        .replace(/Ã½/g, 'ý')
+        .replace(/Ä'/g, 'đ')
+      
+      return convertedText
+    }
+    
+    // Recursive function để convert tất cả text trong object
+    const convertObjectText = (obj: any): any => {
+      if (typeof obj === 'string') {
+        return convertVietnameseText(obj)
+      } else if (Array.isArray(obj)) {
+        return obj.map(convertObjectText)
+      } else if (obj && typeof obj === 'object') {
+        const converted: any = {}
+        for (const [key, value] of Object.entries(obj)) {
+          converted[key] = convertObjectText(value)
+        }
+        return converted
+      }
+      return obj
+    }
+    
+    // Convert toàn bộ data
+    const convertedData = convertObjectText(jsonData)
+    
+    // Tạo file với Vietnamese font
+    const vietnameseDir = join(process.cwd(), 'uploads', 'vietnamese')
+    await mkdir(vietnameseDir, { recursive: true })
+    
+    const vietnameseFilePath = join(vietnameseDir, `vietnamese_${basename(mergedJsonPath)}`)
+    await writeFile(vietnameseFilePath, JSON.stringify(convertedData, null, 2), 'utf-8')
+    
+    console.log(`🇻🇳 Vietnamese font file created: ${vietnameseFilePath}`)
+    return vietnameseFilePath
+  } catch (error) {
+    console.error('Error in convertToVietnameseFont:', error)
+    throw error
+  }
+}
+
+// PHASE 3: Parse conversations từ file đã convert
+async function parseConversationsFromMergedFile(vietnameseFilePath: string, source: string): Promise<any[]> {
+  try {
+    console.log(`💬 Parsing conversations from Vietnamese file...`)
+    
+    const fileContent = await readFile(vietnameseFilePath, 'utf-8')
+    const jsonData = JSON.parse(fileContent)
+    
+    let conversations: any[] = []
+    
+    if (source === 'FACEBOOK') {
+      if (Array.isArray(jsonData)) {
+        // Nếu là array of conversations
+        for (const item of jsonData) {
+          const parsed = await FacebookParser.parseConversation(item)
+          conversations.push(...parsed)
+        }
+      } else {
+        // Single conversation object
+        conversations = await FacebookParser.parseConversation(jsonData)
+      }
+    } else {
+      throw new Error(`Unsupported source: ${source}`)
+    }
+    
+    console.log(`✅ Parsed ${conversations.length} conversations from Vietnamese file`)
+    return conversations
+  } catch (error) {
+    console.error('Error in parseConversationsFromMergedFile:', error)
+    throw error
+  }
+}

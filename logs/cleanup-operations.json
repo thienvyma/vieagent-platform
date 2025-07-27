@@ -1,0 +1,50 @@
+{
+  "lastUpdated": "2025-07-15T15:49:23.144Z",
+  "totalOperations": 1,
+  "operations": [
+    {
+      "type": "manual",
+      "timestamp": "2025-07-15T15:49:23.144Z",
+      "duration": 1,
+      "filesProcessed": 14,
+      "spaceReclaimed": 1280000,
+      "details": {
+        "temp": {
+          "category": "Temporary Files",
+          "filesProcessed": 11,
+          "spaceReclaimed": 1126400,
+          "locations": [
+            {
+              "location": "D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\temp",
+              "filesFound": 8,
+              "status": "cleaned"
+            },
+            {
+              "location": "D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\.next\\cache",
+              "filesFound": 3,
+              "status": "cleaned"
+            },
+            {
+              "location": "D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\uploads\\temp",
+              "filesFound": 0,
+              "status": "not_exists"
+            }
+          ]
+        },
+        "logs": {
+          "category": "Log Files",
+          "filesProcessed": 0,
+          "spaceReclaimed": 0,
+          "retentionDays": 30
+        },
+        "cache": {
+          "category": "Cache Files",
+          "filesProcessed": 3,
+          "spaceReclaimed": 153600,
+          "maxAge": "24 hours"
+        }
+      },
+      "success": true
+    }
+  ]
+}

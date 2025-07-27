@@ -1,0 +1,19 @@
+{
+  "level": "debug",
+  "format": "json",
+  "destinations": [
+    {
+      "type": "file",
+      "path": "./logs/app.log"
+    },
+    {
+      "type": "console",
+      "enabled": true
+    }
+  ],
+  "rotation": {
+    "enabled": true,
+    "maxSize": "10MB",
+    "maxFiles": 5
+  }
+}

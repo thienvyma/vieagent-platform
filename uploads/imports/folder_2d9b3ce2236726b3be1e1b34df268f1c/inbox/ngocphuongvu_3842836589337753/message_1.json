@@ -1,0 +1,25 @@
+{
+  "participants": [
+    {
+      "name": "Ngoc Phuong Vu"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Ngoc Phuong Vu",
+      "timestamp_ms": 1730954902884,
+      "content": "Cho m\u00c3\u00acnh h\u00e1\u00bb\u008fi th\u00c3\u00aam v\u00e1\u00bb\u0081 l\u00e1\u00bb\u009bp n\u00c3\u00a0y.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Ngoc Phuong Vu",
+  "is_still_participant": false,
+  "thread_path": "inbox/ngocphuongvu_3842836589337753",
+  "magic_words": [
+    
+  ]
+}

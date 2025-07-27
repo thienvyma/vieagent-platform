@@ -1,0 +1,83 @@
+{
+  "participants": [
+    {
+      "name": "Mai Trung Ki\u00c3\u00aan"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737958822369,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737958822065,
+      "content": "The Design Council would like to send you updates, which may be promotional. Learn More(https://www.facebook.com/help/messenger-app/564030381383143)",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737958820882,
+      "content": "Ki\u00c3\u00aanTDC xin thay l\u00e1\u00bb\u009di c\u00e1\u00ba\u00a3m \u00c6\u00a1n \u00c4\u0091\u00e1\u00ba\u00bfn t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c b\u00e1\u00ba\u00a1n h\u00e1\u00bb\u008dc vi\u00c3\u00aan v\u00c3\u00a0 nh\u00e1\u00bb\u00afng ng\u00c6\u00b0\u00e1\u00bb\u009di \u00c4\u0091\u00c3\u00a3 lu\u00c3\u00b4n theo d\u00c3\u00b5i, quan t\u00c3\u00a2m \u00e1\u00bb\u00a7ng h\u00e1\u00bb\u0099 \u00c4\u0091\u00e1\u00ba\u00bfn TDC trong su\u00e1\u00bb\u0091t n\u00c4\u0083m 2024 v\u00e1\u00bb\u00aba qua b\u00e1\u00ba\u00b1ng ch\u00c6\u00b0\u00c6\u00a1ng tr\u00c3\u00acnh \u00c6\u00b0u \u00c4\u0091\u00c3\u00a3i - gi\u00e1\u00ba\u00a3m gi\u00c3\u00a1 tr\u00e1\u00bb\u00b1c ti\u00e1\u00ba\u00bfp 20% cho t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c g\u00c3\u00b3i Membership",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Mai Trung Ki\u00c3\u00aan",
+      "timestamp_ms": 1737787807938,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Mai Trung Ki\u00c3\u00aan",
+      "timestamp_ms": 1737787804639,
+      "content": "Cho m\u00c3\u00acnh h\u00e1\u00bb\u008fi g\u00c3\u00b3i membership l\u00c3\u00a0 kh\u00c3\u00a1c g\u00c3\u00ac c\u00c3\u00a1c l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc bth \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Mai Trung Ki\u00c3\u00aan",
+      "timestamp_ms": 1737787778625,
+      "content": "Aa d\u00e1\u00ba\u00a1 m\u00c3\u00acnh c\u00e1\u00ba\u00a3m \u00c6\u00a1n TDC \u00e1\u00ba\u00a1",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "The Design Council"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737766544089,
+      "content": "B\u00e1\u00ba\u00a1n \u00c6\u00a1i, Ch\u00c3\u00bac m\u00e1\u00bb\u00abng b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 th\u00e1\u00ba\u00afng gi\u00e1\u00ba\u00a3i Minigame t\u00e1\u00ba\u00a1i TDC.\nM\u00c3\u00acnh g\u00e1\u00bb\u00adi \u00c4\u0091\u00e1\u00ba\u00bfn b\u00e1\u00ba\u00a1n Voucher nh\u00c3\u00a9 <3",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737766543387,
+      "photos": [
+        {
+          "uri": "this_profile's_activity_across_facebook/messages/inbox/maitrungkien_3613084235648009/photos/474031619_642276225125532_7916204635067392151_n_642276221792199.png",
+          "creation_timestamp": 1737766525
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Mai Trung Ki\u00c3\u00aan",
+  "is_still_participant": false,
+  "thread_path": "inbox/maitrungkien_3613084235648009",
+  "magic_words": [
+    
+  ]
+}

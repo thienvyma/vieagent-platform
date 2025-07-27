@@ -1,0 +1,94 @@
+{
+  "participants": [
+    {
+      "name": "Nguyen Van A"
+    },
+    {
+      "name": "AI Agent Support"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Nguyen Van A",
+      "timestamp_ms": 1703836800000,
+      "content": "Xin chào, tôi có thể hỏi về sản phẩm AI Agent Platform không?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "AI Agent Support",
+      "timestamp_ms": 1703837100000,
+      "content": "Xin chào! Chúng tôi rất vui được hỗ trợ bạn. AI Agent Platform giúp bạn tạo và triển khai các AI assistants thông minh. Bạn muốn biết thông tin gì cụ thể?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Nguyen Van A", 
+      "timestamp_ms": 1703837200000,
+      "content": "Có những plan pricing nào vậy ạ?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "AI Agent Support",
+      "timestamp_ms": 1703837350000,
+      "content": "Chúng tôi có 3 plans chính:\n\n🆓 FREE Plan:\n- 5 AI agents\n- 1,000 messages/tháng\n- Basic analytics\n- Community support\n\n⭐ PRO Plan ($29/tháng):\n- 50 AI agents\n- Unlimited messages\n- Advanced analytics\n- Email support\n- Custom integrations\n\n👑 ENTERPRISE Plan:\n- Unlimited agents\n- Dedicated infrastructure\n- 24/7 support\n- Custom development\n\nBạn quan tâm plan nào ạ?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Nguyen Van A",
+      "timestamp_ms": 1703837500000,
+      "content": "PRO plan có vẻ phù hợp với công ty tôi. Làm sao để bắt đầu?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "AI Agent Support",
+      "timestamp_ms": 1703837620000,
+      "content": "Tuyệt vời! Để bắt đầu với PRO plan, bạn có thể:\n\n1. Đăng ký tài khoản tại https://aiagent.com\n2. Upload API keys (OpenAI, Anthropic, etc.)\n3. Tạo agent đầu tiên với custom prompt\n4. Upload knowledge files (FAQ, company info)\n5. Test agent và deploy\n\nBạn có muốn tôi hướng dẫn cụ thể từng bước không?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Nguyen Van A",
+      "timestamp_ms": 1703837720000,
+      "content": "Có, xin hướng dẫn chi tiết ạ. Công ty tôi muốn tự động hóa customer support.",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "AI Agent Support",
+      "timestamp_ms": 1703837850000,
+      "content": "Perfect! Cho customer support automation, tôi khuyên bạn:\n\n📋 Bước 1: Chuẩn bị dữ liệu\n- File FAQ (.csv format)\n- Company information\n- Product catalog\n- Common customer scenarios\n\n🤖 Bước 2: Tạo Agent\n- Model: GPT-4 cho quality cao\n- Prompt: \"Bạn là customer support agent chuyên nghiệp của [Company]. Hãy trả lời thân thiện, chính xác và hữu ích.\"\n- Temperature: 0.3 cho consistency\n\n🔧 Bước 3: Integration\n- API endpoints cho website\n- Webhook cho messaging platforms\n- Analytics dashboard\n\nBạn có sẵn dữ liệu FAQ chưa ạ?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Nguyen Van A",
+      "timestamp_ms": 1703838000000,
+      "content": "Chúng tôi có file Excel với khoảng 200 câu hỏi thường gặp. Có thể sử dụng được không?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "AI Agent Support", 
+      "timestamp_ms": 1703838120000,
+      "content": "Tuyệt vời! File Excel có thể convert sang CSV format dễ dàng. Format chúng tôi khuyên:\n\nquestion,answer\n\"Làm sao để đăng ký?\",\"Bạn có thể đăng ký tại...\"\n\"Giá sản phẩm là bao nhiêu?\",\"Giá hiện tại là...\"\n\nHệ thống sẽ tự động parse và sử dụng trong context. Agent sẽ tìm câu trả lời phù hợp nhất từ knowledge base này.\n\nTôi có thể gửi template CSV và hướng dẫn chi tiết qua email được không ạ?",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Nguyen Van A",
+      "timestamp_ms": 1703838240000,
+      "content": "Được ạ, email của tôi là nguyen.vana@company.com. Cảm ơn support rất nhiều!",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "AI Agent Support",
+      "timestamp_ms": 1703838340000,
+      "content": "Cảm ơn bạn! Tôi sẽ gửi:\n\n📧 Email trong 5 phút:\n- CSV template cho FAQ\n- Step-by-step setup guide\n- Best practices cho customer support\n- Link PRO plan trial 14 ngày miễn phí\n\n📞 Follow-up:\n- Call hỗ trợ setup trong 24h\n- Training session cho team\n\nCó gì thắc mắc thêm, bạn cứ liên hệ nhé! Chúc bạn thành công với AI automation! 🚀",
+      "type": "Generic"
+    },
+    {
+      "sender_name": "Nguyen Van A",
+      "timestamp_ms": 1703838400000,
+      "content": "Perfect! Cảm ơn bạn rất nhiều. Tôi sẽ thử ngay hôm nay 👍",
+      "type": "Generic"
+    }
+  ],
+  "title": "AI Agent Platform - Customer Support Inquiry",
+  "is_still_participant": true,
+  "thread_type": "Regular",
+  "thread_path": "inbox/NguyenVanA_AIAgentSupport_1703836800"
+} 

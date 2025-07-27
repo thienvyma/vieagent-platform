@@ -1,0 +1,1491 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
+import {
+  CreditCard,
+  Search,
+  Calendar,
+  TrendingUp,
+  Users,
+  DollarSign,
+  Eye,
+  Edit,
+  XCircle,
+  RefreshCw,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  MoreVertical,
+  Download,
+  UserCheck,
+  Banknote,
+  Plus,
+  Settings,
+  Star,
+  Trash2,
+  Copy,
+  Check,
+  X,
+  FileText,
+  ArrowUp,
+} from 'lucide-react';
+import { hasPermission, getRoleDisplayName, type UserRole } from '@/lib/permissions';
+import { Dialog } from '@headlessui/react';
+
+// Types
+interface Subscription {
+  id: string;
+  status: string;
+  startDate: string;
+  endDate?: string;
+  autoRenew: boolean;
+  amount: number;
+  currency: string;
+  paymentStatus: string;
+  paymentMethod?: string;
+  transactionId?: string;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    isActive: boolean;
+  };
+  plan: {
+    id: string;
+    name: string;
+    price: number;
+    currency: string;
+    interval: string;
+  };
+}
+
+interface SubscriptionStats {
+  ACTIVE: number;
+  CANCELLED: number;
+  EXPIRED: number;
+  SUSPENDED: number;
+  PENDING: number;
+}
+
+interface SubscriptionDetail extends Subscription {
+  usageStats: {
+    agents: { current: number; limit: number; percentage: number };
+    conversations: { current: number; limit: number; percentage: number };
+    storage: { current: number; limit: number; percentage: number };
+    apiCalls: { current: number; limit: number; percentage: number };
+  };
+}
+
+export default function SubscriptionsPage() {
+  const { data: session } = useSession();
+  const currentUserRole = session?.user?.role as UserRole;
+
+  // Subscriptions states
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [stats, setStats] = useState<SubscriptionStats>({
+    ACTIVE: 0,
+    CANCELLED: 0,
+    EXPIRED: 0,
+    SUSPENDED: 0,
+    PENDING: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [planFilter, setPlanFilter] = useState('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  // Modal states
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedSubscription, setSelectedSubscription] = useState<SubscriptionDetail | null>(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelSubscription, setCancelSubscription] = useState<Subscription | null>(null);
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [refundSubscription, setRefundSubscription] = useState<Subscription | null>(null);
+  const [showManualVerifyModal, setShowManualVerifyModal] = useState(false);
+  const [manualVerifySubscription, setManualVerifySubscription] = useState<Subscription | null>(
+    null
+  );
+  const [verificationNote, setVerificationNote] = useState('');
+
+  // Upgrade Requests states
+  const [activeTab, setActiveTab] = useState<'subscriptions' | 'upgrade-requests'>('subscriptions');
+  const [upgradeRequests, setUpgradeRequests] = useState<any[]>([]);
+  const [upgradeRequestsStats, setUpgradeRequestsStats] = useState({
+    PENDING: 0,
+    APPROVED: 0,
+    REJECTED: 0,
+    CANCELLED: 0,
+  });
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [selectedUpgradeRequest, setSelectedUpgradeRequest] = useState<any>(null);
+  const [upgradeAction, setUpgradeAction] = useState<'approve' | 'reject' | null>(null);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [reviewNotes, setReviewNotes] = useState('');
+
+  // Action loading states
+  const [actionLoading, setActionLoading] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  // Permissions
+  const canManageSubscriptions = hasPermission(currentUserRole, 'manage_subscriptions');
+  const canCancelSubscriptions = hasPermission(currentUserRole, 'cancel_subscriptions');
+  const canRefundSubscriptions = hasPermission(currentUserRole, 'refund_subscriptions');
+  const canVerifyPayments = hasPermission(currentUserRole, 'verify_payments');
+
+  useEffect(() => {
+    if (activeTab === 'subscriptions') {
+      fetchSubscriptions();
+    } else {
+      fetchUpgradeRequests();
+    }
+  }, [page, statusFilter, planFilter, searchTerm, activeTab]);
+
+  const fetchSubscriptions = async () => {
+    try {
+      setLoading(true);
+      console.log('🔍 DEBUG: Starting fetchSubscriptions...');
+      console.log('🔍 DEBUG: Session:', session);
+      console.log('🔍 DEBUG: User role:', currentUserRole);
+
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        ...(statusFilter !== 'all' && { status: statusFilter }),
+        ...(planFilter !== 'all' && { planId: planFilter }),
+        ...(searchTerm && { search: searchTerm }),
+      });
+
+      console.log('🔍 DEBUG: API URL:', `/api/admin/subscriptions?${params}`);
+
+      const response = await fetch(`/api/admin/subscriptions?${params}`);
+      console.log('🔍 DEBUG: Response status:', response.status);
+      console.log('🔍 DEBUG: Response headers:', response.headers);
+
+      const data = await response.json();
+      console.log('🔍 DEBUG: Response data:', data);
+
+      if (data.success) {
+        console.log('✅ DEBUG: Setting subscriptions:', data.data.subscriptions.length);
+        setSubscriptions(data.data.subscriptions);
+        setStats(data.data.stats);
+        setTotalPages(data.data.pagination.totalPages);
+      } else {
+        console.error('❌ DEBUG: API Error:', data.error);
+        toast.error(data.error || 'Không thể tải danh sách subscriptions');
+      }
+    } catch (error) {
+      console.error('❌ DEBUG: Fetch error:', error);
+      toast.error('Lỗi khi tải dữ liệu');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUpgradeRequests = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        ...(statusFilter !== 'all' && { status: statusFilter }),
+        ...(searchTerm && { search: searchTerm }),
+      });
+
+      const response = await fetch(`/api/admin/upgrade-requests?${params}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setUpgradeRequests(data.data.upgradeRequests);
+        setUpgradeRequestsStats(data.data.stats);
+        setTotalPages(data.data.pagination.totalPages);
+      } else {
+        toast.error(data.error || 'Không thể tải danh sách upgrade requests');
+      }
+    } catch (error) {
+      console.error('Fetch upgrade requests error:', error);
+      toast.error('Lỗi khi tải dữ liệu');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleViewDetail = async (subscription: Subscription) => {
+    try {
+      setDetailLoading(true);
+      setShowDetailModal(true);
+
+      const response = await fetch(`/api/admin/subscriptions/${subscription.id}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setSelectedSubscription(data.data);
+      } else {
+        toast.error('Không thể tải chi tiết subscription');
+        setShowDetailModal(false);
+      }
+    } catch (error) {
+      console.error('Fetch subscription detail error:', error);
+      toast.error('Lỗi khi tải chi tiết');
+      setShowDetailModal(false);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
+  const handleCancelSubscription = async (withRefund: boolean = false) => {
+    if (!cancelSubscription) return;
+
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/admin/subscriptions/${cancelSubscription.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'cancel',
+          withRefund,
+        }),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(`✅ ${withRefund ? 'Hoàn tiền và hủy' : 'Hủy'} subscription thành công!`);
+        setShowCancelModal(false);
+        setShowRefundModal(false);
+        setCancelSubscription(null);
+        setRefundSubscription(null);
+        fetchSubscriptions();
+      } else {
+        toast.error(data.error || 'Không thể hủy subscription');
+      }
+    } catch (error) {
+      console.error('Cancel subscription error:', error);
+      toast.error('Lỗi khi hủy subscription');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleRenewSubscription = async (subscription: Subscription) => {
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/admin/subscriptions/${subscription.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'renew',
+        }),
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('✅ Gia hạn subscription thành công!');
+        fetchSubscriptions();
+      } else {
+        toast.error(data.error || 'Không thể gia hạn subscription');
+      }
+    } catch (error) {
+      console.error('Renew subscription error:', error);
+      toast.error('Lỗi khi gia hạn subscription');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleManualVerifyPayment = async () => {
+    if (!manualVerifySubscription) return;
+
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/admin/subscriptions/${manualVerifySubscription.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'manual_verify',
+          verificationNote,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('✅ Xác nhận thanh toán thủ công thành công!');
+        setShowManualVerifyModal(false);
+        setManualVerifySubscription(null);
+        setVerificationNote('');
+        fetchSubscriptions();
+      } else {
+        toast.error(data.error || 'Không thể xác nhận thanh toán');
+      }
+    } catch (error) {
+      console.error('Manual verify error:', error);
+      toast.error('Lỗi khi xác nhận thanh toán');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleUpgradeRequestAction = async () => {
+    if (!selectedUpgradeRequest || !upgradeAction) return;
+
+    if (upgradeAction === 'reject' && !rejectionReason.trim()) {
+      toast.error('Vui lòng nhập lý do từ chối');
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      const response = await fetch(`/api/admin/upgrade-requests/${selectedUpgradeRequest.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: upgradeAction,
+          rejectionReason: upgradeAction === 'reject' ? rejectionReason : undefined,
+          reviewNotes,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(
+          `✅ ${upgradeAction === 'approve' ? 'Phê duyệt' : 'Từ chối'} yêu cầu nâng cấp thành công!`
+        );
+        setShowUpgradeModal(false);
+        setSelectedUpgradeRequest(null);
+        setUpgradeAction(null);
+        setRejectionReason('');
+        setReviewNotes('');
+        fetchUpgradeRequests();
+      } else {
+        toast.error(data.error || 'Không thể xử lý yêu cầu');
+      }
+    } catch (error) {
+      console.error('Process upgrade request error:', error);
+      toast.error('Lỗi khi xử lý yêu cầu');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors = {
+      ACTIVE: 'bg-green-500/20 text-green-300 border-green-500/30',
+      CANCELLED: 'bg-red-500/20 text-red-300 border-red-500/30',
+      EXPIRED: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+      SUSPENDED: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+      PENDING: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    };
+    return colors[status as keyof typeof colors] || colors.PENDING;
+  };
+
+  const getPaymentStatusColor = (status: string) => {
+    const colors = {
+      COMPLETED: 'bg-green-500/20 text-green-300 border-green-500/30',
+      PENDING: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+      FAILED: 'bg-red-500/20 text-red-300 border-red-500/30',
+      REFUNDED: 'bg-gray-500/20 text-gray-300 border-gray-500/30',
+      CANCELLED: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+    };
+    return colors[status as keyof typeof colors] || colors.PENDING;
+  };
+
+  const formatCurrency = (amount: number, currency: string) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: currency === 'USD' ? 'USD' : 'VND',
+    }).format(amount);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('vi-VN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  if (!hasPermission(currentUserRole, 'view_subscriptions')) {
+    return (
+      <div className='flex items-center justify-center min-h-[400px]'>
+        <div className='text-center'>
+          <AlertTriangle className='w-16 h-16 text-red-400 mx-auto mb-4' />
+          <h2 className='text-xl font-semibold text-white mb-2'>Không có quyền truy cập</h2>
+          <p className='text-gray-400'>Bạn không có quyền xem trang này.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className='space-y-8'>
+      {/* Header */}
+      <div className='flex items-center justify-between'>
+        <div>
+          <h1 className='text-3xl font-bold text-white mb-2'>
+            {activeTab === 'subscriptions' ? 'Quản lý Subscriptions' : 'Quản lý Upgrade Requests'}
+          </h1>
+          <p className='text-gray-400'>
+            {activeTab === 'subscriptions'
+              ? 'Quản lý tất cả subscription và thanh toán'
+              : 'Phê duyệt yêu cầu nâng cấp gói dịch vụ'}
+          </p>
+        </div>
+        <div className='flex items-center space-x-4'>
+          <button className='px-4 py-2 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors flex items-center space-x-2'>
+            <Download className='w-4 h-4' />
+            <span>Xuất báo cáo</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10'>
+        <div className='flex space-x-2'>
+          <button
+            onClick={() => {
+              setActiveTab('subscriptions');
+              setPage(1);
+            }}
+            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'subscriptions'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-gray-400 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            📋 Subscriptions
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('upgrade-requests');
+              setPage(1);
+            }}
+            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'upgrade-requests'
+                ? 'bg-purple-500 text-white shadow-lg'
+                : 'text-gray-400 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            🚀 Upgrade Requests
+            {upgradeRequestsStats.PENDING > 0 && (
+              <span className='ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full'>
+                {upgradeRequestsStats.PENDING}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      {activeTab === 'subscriptions' ? (
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6'>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <CheckCircle className='w-8 h-8 text-green-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Active</p>
+                <p className='text-2xl font-bold text-white'>{stats.ACTIVE}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <XCircle className='w-8 h-8 text-red-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Cancelled</p>
+                <p className='text-2xl font-bold text-white'>{stats.CANCELLED}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <Clock className='w-8 h-8 text-orange-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Expired</p>
+                <p className='text-2xl font-bold text-white'>{stats.EXPIRED}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <AlertTriangle className='w-8 h-8 text-yellow-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Suspended</p>
+                <p className='text-2xl font-bold text-white'>{stats.SUSPENDED}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <Clock className='w-8 h-8 text-blue-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Pending</p>
+                <p className='text-2xl font-bold text-white'>{stats.PENDING}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <Clock className='w-8 h-8 text-yellow-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Pending</p>
+                <p className='text-2xl font-bold text-white'>{upgradeRequestsStats.PENDING}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <CheckCircle className='w-8 h-8 text-green-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Approved</p>
+                <p className='text-2xl font-bold text-white'>{upgradeRequestsStats.APPROVED}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <XCircle className='w-8 h-8 text-red-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Rejected</p>
+                <p className='text-2xl font-bold text-white'>{upgradeRequestsStats.REJECTED}</p>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+            <div className='flex items-center space-x-3'>
+              <XCircle className='w-8 h-8 text-gray-400' />
+              <div>
+                <p className='text-gray-400 text-sm'>Cancelled</p>
+                <p className='text-2xl font-bold text-white'>{upgradeRequestsStats.CANCELLED}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Filters */}
+      <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+          <div className='relative'>
+            <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4' />
+            <input
+              type='text'
+              placeholder={
+                activeTab === 'subscriptions'
+                  ? 'Tìm theo tên, email, plan...'
+                  : 'Tìm theo tên, email...'
+              }
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className='w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-500'
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+            className='px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-500'
+          >
+            <option value='all'>Tất cả trạng thái</option>
+            {activeTab === 'subscriptions' ? (
+              <>
+                <option value='ACTIVE'>Active</option>
+                <option value='CANCELLED'>Cancelled</option>
+                <option value='EXPIRED'>Expired</option>
+                <option value='SUSPENDED'>Suspended</option>
+                <option value='PENDING'>Pending</option>
+              </>
+            ) : (
+              <>
+                <option value='PENDING'>Pending</option>
+                <option value='APPROVED'>Approved</option>
+                <option value='REJECTED'>Rejected</option>
+                <option value='CANCELLED'>Cancelled</option>
+              </>
+            )}
+          </select>
+          {activeTab === 'subscriptions' && (
+            <select
+              value={planFilter}
+              onChange={e => setPlanFilter(e.target.value)}
+              className='px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:border-blue-500'
+            >
+              <option value='all'>Tất cả gói</option>
+              <option value='trial'>Trial</option>
+              <option value='basic'>Basic</option>
+              <option value='pro'>Pro</option>
+              <option value='enterprise'>Enterprise</option>
+              <option value='ultimate'>Ultimate</option>
+            </select>
+          )}
+        </div>
+      </div>
+
+      {/* Content Tables */}
+      <div className='bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10'>
+        {activeTab === 'subscriptions' ? (
+          <div className='overflow-x-auto'>
+            <table className='w-full'>
+              <thead>
+                <tr className='border-b border-white/10'>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>User</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Plan</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Status</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Payment</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Amount</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Start Date</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>End Date</th>
+                  <th className='text-center py-4 px-2 text-gray-300 font-medium'>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <tr key={index} className='border-b border-white/5'>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-32 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-20 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-6 w-16 rounded-full'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-6 w-20 rounded-full'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-16 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-24 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-24 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-8 w-8 rounded mx-auto'></div>
+                      </td>
+                    </tr>
+                  ))
+                ) : subscriptions.length > 0 ? (
+                  subscriptions.map(subscription => (
+                    <tr
+                      key={subscription.id}
+                      className='border-b border-white/5 hover:bg-white/5 transition-colors'
+                    >
+                      <td className='py-4 px-2'>
+                        <div>
+                          <div className='text-white font-medium'>{subscription.user.name}</div>
+                          <div className='text-gray-400 text-sm'>{subscription.user.email}</div>
+                        </div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='text-white font-medium'>{subscription.plan.name}</div>
+                        <div className='text-gray-400 text-sm'>{subscription.plan.interval}</div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs border ${getStatusColor(subscription.status)}`}
+                        >
+                          {subscription.status}
+                        </span>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs border ${getPaymentStatusColor(subscription.paymentStatus)}`}
+                        >
+                          {subscription.paymentStatus}
+                        </span>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='text-white font-medium'>
+                          {formatCurrency(subscription.amount, subscription.currency)}
+                        </div>
+                      </td>
+                      <td className='py-4 px-2 text-gray-300 text-sm'>
+                        {formatDate(subscription.startDate)}
+                      </td>
+                      <td className='py-4 px-2 text-gray-300 text-sm'>
+                        {subscription.endDate ? formatDate(subscription.endDate) : 'Không giới hạn'}
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='flex items-center justify-center space-x-1'>
+                          <button
+                            onClick={() => handleViewDetail(subscription)}
+                            className='p-2 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors'
+                            title='Xem chi tiết'
+                          >
+                            <Eye className='w-4 h-4' />
+                          </button>
+
+                          {/* Manual Verify Button - chỉ hiển thị cho payment PENDING */}
+                          {canVerifyPayments && subscription.paymentStatus === 'PENDING' && (
+                            <button
+                              onClick={() => {
+                                setManualVerifySubscription(subscription);
+                                setShowManualVerifyModal(true);
+                              }}
+                              className='p-2 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors'
+                              title='Xác nhận thanh toán thủ công'
+                            >
+                              <Check className='w-4 h-4' />
+                            </button>
+                          )}
+
+                          {canCancelSubscriptions && subscription.status === 'ACTIVE' && (
+                            <button
+                              onClick={() => {
+                                setCancelSubscription(subscription);
+                                setShowCancelModal(true);
+                              }}
+                              className='p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors'
+                              title='Hủy subscription'
+                            >
+                              <XCircle className='w-4 h-4' />
+                            </button>
+                          )}
+                          {canRefundSubscriptions && subscription.paymentStatus === 'COMPLETED' && (
+                            <button
+                              onClick={() => {
+                                setRefundSubscription(subscription);
+                                setShowRefundModal(true);
+                              }}
+                              className='p-2 text-yellow-400 hover:bg-yellow-500/20 rounded-lg transition-colors'
+                              title='Hoàn tiền'
+                            >
+                              <Banknote className='w-4 h-4' />
+                            </button>
+                          )}
+                          {canManageSubscriptions && subscription.status === 'EXPIRED' && (
+                            <button
+                              onClick={() => handleRenewSubscription(subscription)}
+                              disabled={actionLoading}
+                              className='p-2 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors disabled:opacity-50'
+                              title='Gia hạn'
+                            >
+                              <RefreshCw className='w-4 h-4' />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={8} className='py-12 text-center text-gray-400'>
+                      <CreditCard className='w-12 h-12 mx-auto mb-4 opacity-50' />
+                      <p>Không có subscription nào</p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className='overflow-x-auto'>
+            <table className='w-full'>
+              <thead>
+                <tr className='border-b border-white/10'>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>User</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Current Plan</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Target Plan</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Status</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Request Date</th>
+                  <th className='text-left py-4 px-2 text-gray-300 font-medium'>Reason</th>
+                  <th className='text-center py-4 px-2 text-gray-300 font-medium'>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <tr key={index} className='border-b border-white/5'>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-32 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-20 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-20 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-6 w-16 rounded-full'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-24 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-4 w-32 rounded'></div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='animate-pulse bg-white/10 h-8 w-16 rounded mx-auto'></div>
+                      </td>
+                    </tr>
+                  ))
+                ) : upgradeRequests.length > 0 ? (
+                  upgradeRequests.map(request => (
+                    <tr
+                      key={request.id}
+                      className='border-b border-white/5 hover:bg-white/5 transition-colors'
+                    >
+                      <td className='py-4 px-2'>
+                        <div>
+                          <div className='text-white font-medium'>{request.user.name}</div>
+                          <div className='text-gray-400 text-sm'>{request.user.email}</div>
+                        </div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='text-white font-medium'>{request.currentPlan}</div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='text-white font-medium flex items-center space-x-2'>
+                          <ArrowUp className='w-4 h-4 text-green-400' />
+                          <span>{request.targetPlan}</span>
+                        </div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs border ${getStatusColor(request.status)}`}
+                        >
+                          {request.status}
+                        </span>
+                      </td>
+                      <td className='py-4 px-2 text-gray-300 text-sm'>
+                        {formatDate(request.createdAt)}
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='text-gray-300 text-sm max-w-xs'>
+                          {request.reason ? (
+                            <div className='truncate' title={request.reason}>
+                              {request.reason.length > 50
+                                ? `${request.reason.substring(0, 50)}...`
+                                : request.reason}
+                            </div>
+                          ) : (
+                            <span className='text-gray-500'>Không có lý do</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className='py-4 px-2'>
+                        <div className='flex items-center justify-center space-x-1'>
+                          {/* View Detail Button */}
+                          <button
+                            onClick={() => {
+                              setSelectedUpgradeRequest(request);
+                              setUpgradeAction(null);
+                              setShowUpgradeModal(true);
+                            }}
+                            className='p-2 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors'
+                            title='Xem chi tiết'
+                          >
+                            <Eye className='w-4 h-4' />
+                          </button>
+
+                          {/* Approve/Reject Buttons - chỉ hiển thị cho PENDING requests */}
+                          {canVerifyPayments && request.status === 'PENDING' && (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setSelectedUpgradeRequest(request);
+                                  setUpgradeAction('approve');
+                                  setShowUpgradeModal(true);
+                                }}
+                                className='p-2 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors'
+                                title='Phê duyệt yêu cầu'
+                              >
+                                <Check className='w-4 h-4' />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSelectedUpgradeRequest(request);
+                                  setUpgradeAction('reject');
+                                  setShowUpgradeModal(true);
+                                }}
+                                className='p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors'
+                                title='Từ chối yêu cầu'
+                              >
+                                <X className='w-4 h-4' />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className='py-12 text-center text-gray-400'>
+                      <ArrowUp className='w-12 h-12 mx-auto mb-4 opacity-50' />
+                      <p>Không có yêu cầu nâng cấp nào</p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className='flex items-center justify-between mt-6 pt-6 border-t border-white/10'>
+            <div className='text-gray-400 text-sm'>
+              Trang {page} / {totalPages}
+            </div>
+            <div className='flex items-center space-x-2'>
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className='px-3 py-1 bg-white/10 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                Trước
+              </button>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className='px-3 py-1 bg-white/10 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                Sau
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Upgrade Request Action Modal */}
+      {showUpgradeModal && selectedUpgradeRequest && (
+        <Dialog
+          open={showUpgradeModal}
+          onClose={() => {
+            setShowUpgradeModal(false);
+            setSelectedUpgradeRequest(null);
+            setUpgradeAction(null);
+            setRejectionReason('');
+            setReviewNotes('');
+          }}
+          className='fixed z-50 inset-0 overflow-y-auto'
+        >
+          <div className='flex items-center justify-center min-h-screen px-4'>
+            <div className='fixed inset-0 bg-black/70' aria-hidden='true' />
+            <div className='relative bg-gray-900 rounded-2xl p-8 w-full max-w-2xl mx-auto z-10 border border-white/10'>
+              <Dialog.Title className='text-xl font-bold text-white mb-4 flex items-center space-x-2'>
+                {upgradeAction === 'approve' ? (
+                  <>
+                    <Check className='w-6 h-6 text-green-400' />
+                    <span>Phê duyệt yêu cầu nâng cấp</span>
+                  </>
+                ) : upgradeAction === 'reject' ? (
+                  <>
+                    <X className='w-6 h-6 text-red-400' />
+                    <span>Từ chối yêu cầu nâng cấp</span>
+                  </>
+                ) : (
+                  <>
+                    <Eye className='w-6 h-6 text-blue-400' />
+                    <span>Chi tiết yêu cầu nâng cấp</span>
+                  </>
+                )}
+              </Dialog.Title>
+
+              <div className='text-white mb-6'>
+                <div className='bg-white/5 rounded-xl p-4 mb-4'>
+                  <div className='space-y-3'>
+                    <div>
+                      <span className='text-gray-400'>User:</span>{' '}
+                      <span className='font-semibold'>{selectedUpgradeRequest.user.name}</span>
+                    </div>
+                    <div>
+                      <span className='text-gray-400'>Email:</span>{' '}
+                      {selectedUpgradeRequest.user.email}
+                    </div>
+                    <div>
+                      <span className='text-gray-400'>Current Plan:</span>{' '}
+                      <span className='font-semibold'>{selectedUpgradeRequest.currentPlan}</span>
+                    </div>
+                    <div>
+                      <span className='text-gray-400'>Target Plan:</span>{' '}
+                      <span className='font-semibold text-green-400'>
+                        {selectedUpgradeRequest.targetPlan}
+                      </span>
+                    </div>
+                    <div>
+                      <span className='text-gray-400'>Request Date:</span>{' '}
+                      {formatDate(selectedUpgradeRequest.createdAt)}
+                    </div>
+                    <div>
+                      <span className='text-gray-400'>Status:</span>
+                      <span
+                        className={`ml-2 px-2 py-1 rounded-full text-xs border ${getStatusColor(selectedUpgradeRequest.status)}`}
+                      >
+                        {selectedUpgradeRequest.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedUpgradeRequest.reason && (
+                  <div className='bg-white/5 rounded-xl p-4 mb-4'>
+                    <h4 className='text-white font-semibold mb-2'>Lý do nâng cấp:</h4>
+                    <p className='text-gray-300 text-sm'>{selectedUpgradeRequest.reason}</p>
+                  </div>
+                )}
+
+                {upgradeAction && (
+                  <>
+                    <div className='mb-4'>
+                      <label className='block text-sm font-medium text-gray-300 mb-2'>
+                        Ghi chú xem xét
+                      </label>
+                      <textarea
+                        value={reviewNotes}
+                        onChange={e => setReviewNotes(e.target.value)}
+                        rows={3}
+                        className='w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500'
+                        placeholder='Nhập ghi chú về việc xem xét yêu cầu (tùy chọn)...'
+                      />
+                    </div>
+
+                    {upgradeAction === 'reject' && (
+                      <div className='mb-4'>
+                        <label className='block text-sm font-medium text-gray-300 mb-2'>
+                          Lý do từ chối <span className='text-red-400'>*</span>
+                        </label>
+                        <textarea
+                          value={rejectionReason}
+                          onChange={e => setRejectionReason(e.target.value)}
+                          rows={3}
+                          className='w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-red-500'
+                          placeholder='Nhập lý do từ chối yêu cầu nâng cấp...'
+                        />
+                      </div>
+                    )}
+
+                    <div
+                      className={`${upgradeAction === 'approve' ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'} rounded-xl p-3`}
+                    >
+                      <p
+                        className={`${upgradeAction === 'approve' ? 'text-green-300' : 'text-red-300'} text-sm`}
+                      >
+                        {upgradeAction === 'approve' ? (
+                          <>
+                            ⚠️ <strong>Lưu ý:</strong> Sau khi phê duyệt, user sẽ được nâng cấp lên
+                            gói {selectedUpgradeRequest.targetPlan} ngay lập tức.
+                          </>
+                        ) : (
+                          <>
+                            ⚠️ <strong>Lưu ý:</strong> Sau khi từ chối, user sẽ nhận được thông báo
+                            với lý do từ chối.
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className='flex items-center justify-end space-x-4'>
+                <button
+                  onClick={() => {
+                    setShowUpgradeModal(false);
+                    setSelectedUpgradeRequest(null);
+                    setUpgradeAction(null);
+                    setRejectionReason('');
+                    setReviewNotes('');
+                  }}
+                  className='px-5 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors'
+                >
+                  {upgradeAction ? 'Hủy bỏ' : 'Đóng'}
+                </button>
+                {upgradeAction && (
+                  <button
+                    onClick={handleUpgradeRequestAction}
+                    disabled={
+                      actionLoading || (upgradeAction === 'reject' && !rejectionReason.trim())
+                    }
+                    className={`px-6 py-2 ${upgradeAction === 'approve' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'} text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2`}
+                  >
+                    {upgradeAction === 'approve' ? (
+                      <Check className='w-4 h-4' />
+                    ) : (
+                      <X className='w-4 h-4' />
+                    )}
+                    <span>
+                      {actionLoading
+                        ? upgradeAction === 'approve'
+                          ? 'Đang phê duyệt...'
+                          : 'Đang từ chối...'
+                        : upgradeAction === 'approve'
+                          ? 'Phê duyệt'
+                          : 'Từ chối'}
+                    </span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </Dialog>
+      )}
+
+      {/* Manual Verification Modal */}
+      <Dialog
+        open={showManualVerifyModal}
+        onClose={() => {
+          setShowManualVerifyModal(false);
+          setManualVerifySubscription(null);
+          setVerificationNote('');
+        }}
+        className='fixed z-50 inset-0 overflow-y-auto'
+      >
+        <div className='flex items-center justify-center min-h-screen px-4'>
+          <div className='fixed inset-0 bg-black/70' aria-hidden='true' />
+          <div className='relative bg-gray-900 rounded-2xl p-8 w-full max-w-md mx-auto z-10 border border-white/10'>
+            <Dialog.Title className='text-xl font-bold text-white mb-4 flex items-center space-x-2'>
+              <Check className='w-6 h-6 text-green-400' />
+              <span>Xác nhận thanh toán thủ công</span>
+            </Dialog.Title>
+
+            <div className='text-white mb-6'>
+              <p className='mb-4'>Bạn đang xác nhận thanh toán thủ công cho:</p>
+
+              <div className='bg-white/5 rounded-xl p-4 mb-4'>
+                <div className='space-y-2'>
+                  <div>
+                    <span className='text-gray-400'>User:</span>{' '}
+                    <span className='font-semibold'>{manualVerifySubscription?.user.name}</span>
+                  </div>
+                  <div>
+                    <span className='text-gray-400'>Email:</span>{' '}
+                    {manualVerifySubscription?.user.email}
+                  </div>
+                  <div>
+                    <span className='text-gray-400'>Plan:</span>{' '}
+                    <span className='font-semibold'>{manualVerifySubscription?.plan.name}</span>
+                  </div>
+                  <div>
+                    <span className='text-gray-400'>Số tiền:</span>{' '}
+                    <span className='font-semibold text-green-400'>
+                      {manualVerifySubscription &&
+                        formatCurrency(
+                          manualVerifySubscription.amount,
+                          manualVerifySubscription.currency
+                        )}
+                    </span>
+                  </div>
+                  <div>
+                    <span className='text-gray-400'>Payment Method:</span>{' '}
+                    {manualVerifySubscription?.paymentMethod || 'Bank Transfer'}
+                  </div>
+                </div>
+              </div>
+
+              <div className='mb-4'>
+                <label className='block text-sm font-medium text-gray-300 mb-2'>
+                  Ghi chú xác nhận
+                </label>
+                <textarea
+                  value={verificationNote}
+                  onChange={e => setVerificationNote(e.target.value)}
+                  rows={3}
+                  className='w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-green-500'
+                  placeholder='Nhập ghi chú về việc xác nhận thanh toán (tùy chọn)...'
+                />
+              </div>
+
+              <div className='bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3'>
+                <p className='text-yellow-300 text-sm'>
+                  ⚠️ <strong>Lưu ý:</strong> Sau khi xác nhận, subscription sẽ được kích hoạt ngay
+                  lập tức và payment status sẽ chuyển thành COMPLETED.
+                </p>
+              </div>
+            </div>
+
+            <div className='flex items-center justify-end space-x-4'>
+              <button
+                onClick={() => {
+                  setShowManualVerifyModal(false);
+                  setManualVerifySubscription(null);
+                  setVerificationNote('');
+                }}
+                className='px-5 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors'
+              >
+                Hủy bỏ
+              </button>
+              <button
+                onClick={handleManualVerifyPayment}
+                disabled={actionLoading}
+                className='px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2'
+              >
+                <Check className='w-4 h-4' />
+                <span>{actionLoading ? 'Đang xác nhận...' : 'Xác nhận thanh toán'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Detail Modal */}
+      <Dialog
+        open={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        className='fixed z-50 inset-0 overflow-y-auto'
+      >
+        <div className='flex items-center justify-center min-h-screen px-4'>
+          <div className='fixed inset-0 bg-black/70' aria-hidden='true' />
+          <div className='relative bg-gray-900 rounded-2xl p-8 w-full max-w-4xl mx-auto z-10 border border-white/10 max-h-[90vh] overflow-y-auto'>
+            <Dialog.Title className='text-xl font-bold text-white mb-6'>
+              Chi tiết Subscription
+            </Dialog.Title>
+
+            {detailLoading ? (
+              <div className='space-y-4'>
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className='animate-pulse bg-white/10 h-4 w-full rounded'></div>
+                ))}
+              </div>
+            ) : (
+              selectedSubscription && (
+                <div className='space-y-6'>
+                  {/* User Info */}
+                  <div className='bg-white/5 rounded-xl p-4'>
+                    <h3 className='text-white font-semibold mb-3'>Thông tin người dùng</h3>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Tên</p>
+                        <p className='text-white'>{selectedSubscription.user.name}</p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Email</p>
+                        <p className='text-white'>{selectedSubscription.user.email}</p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Role</p>
+                        <p className='text-white'>
+                          {getRoleDisplayName(selectedSubscription.user.role as UserRole)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Trạng thái</p>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${selectedSubscription.user.isActive ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`}
+                        >
+                          {selectedSubscription.user.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Subscription Info */}
+                  <div className='bg-white/5 rounded-xl p-4'>
+                    <h3 className='text-white font-semibold mb-3'>Thông tin subscription</h3>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Plan</p>
+                        <p className='text-white font-medium'>{selectedSubscription.plan.name}</p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Giá</p>
+                        <p className='text-white'>
+                          {formatCurrency(
+                            selectedSubscription.amount,
+                            selectedSubscription.currency
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Status</p>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs border ${getStatusColor(selectedSubscription.status)}`}
+                        >
+                          {selectedSubscription.status}
+                        </span>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Payment Status</p>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs border ${getPaymentStatusColor(selectedSubscription.paymentStatus)}`}
+                        >
+                          {selectedSubscription.paymentStatus}
+                        </span>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Start Date</p>
+                        <p className='text-white'>{formatDate(selectedSubscription.startDate)}</p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>End Date</p>
+                        <p className='text-white'>
+                          {selectedSubscription.endDate
+                            ? formatDate(selectedSubscription.endDate)
+                            : 'Không giới hạn'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Auto Renew</p>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${selectedSubscription.autoRenew ? 'bg-green-500/20 text-green-300' : 'bg-gray-500/20 text-gray-300'}`}
+                        >
+                          {selectedSubscription.autoRenew ? 'Yes' : 'No'}
+                        </span>
+                      </div>
+                      <div>
+                        <p className='text-gray-400 text-sm'>Payment Method</p>
+                        <p className='text-white'>{selectedSubscription.paymentMethod || 'N/A'}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Usage Statistics */}
+                  <div className='bg-white/5 rounded-xl p-4'>
+                    <h3 className='text-white font-semibold mb-3'>Thống kê sử dụng</h3>
+                    <div className='grid grid-cols-2 gap-4'>
+                      {Object.entries(selectedSubscription.usageStats).map(([key, usage]) => (
+                        <div key={key} className='bg-white/5 rounded-lg p-3'>
+                          <div className='flex justify-between items-center mb-2'>
+                            <p className='text-gray-400 text-sm capitalize'>{key}</p>
+                            <p className='text-white text-sm'>
+                              {usage.current} / {usage.limit}
+                            </p>
+                          </div>
+                          <div className='w-full bg-gray-700 rounded-full h-2'>
+                            <div
+                              className={`h-2 rounded-full ${usage.percentage > 80 ? 'bg-red-500' : usage.percentage > 60 ? 'bg-yellow-500' : 'bg-green-500'}`}
+                              style={{ width: `${Math.min(100, usage.percentage)}%` }}
+                            ></div>
+                          </div>
+                          <p className='text-gray-400 text-xs mt-1'>
+                            {usage.percentage.toFixed(1)}% đã sử dụng
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
+
+            <div className='flex justify-end mt-6'>
+              <button
+                onClick={() => setShowDetailModal(false)}
+                className='px-6 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors'
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Cancel Modal */}
+      <Dialog
+        open={showCancelModal}
+        onClose={() => {
+          setShowCancelModal(false);
+          setCancelSubscription(null);
+        }}
+        className='fixed z-50 inset-0 overflow-y-auto'
+      >
+        <div className='flex items-center justify-center min-h-screen px-4'>
+          <div className='fixed inset-0 bg-black/70' aria-hidden='true' />
+          <div className='relative bg-gray-900 rounded-2xl p-8 w-full max-w-md mx-auto z-10 border border-white/10'>
+            <Dialog.Title className='text-xl font-bold text-white mb-4'>
+              Xác nhận hủy Subscription
+            </Dialog.Title>
+            <div className='text-white mb-6'>
+              Bạn có chắc chắn muốn hủy subscription của user{' '}
+              <span className='font-semibold'>{cancelSubscription?.user.name}</span> không?
+              <br />
+              <br />
+              Plan: <span className='font-semibold'>{cancelSubscription?.plan.name}</span>
+              <br />
+              Hành động này sẽ ngay lập tức downgrade user về plan Free.
+            </div>
+            <div className='flex items-center justify-end space-x-4'>
+              <button
+                onClick={() => {
+                  setShowCancelModal(false);
+                  setCancelSubscription(null);
+                }}
+                className='px-5 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors'
+              >
+                Hủy bỏ
+              </button>
+              <button
+                onClick={() => handleCancelSubscription(false)}
+                disabled={actionLoading}
+                className='px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                {actionLoading ? 'Đang hủy...' : 'Hủy Subscription'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Refund Modal */}
+      <Dialog
+        open={showRefundModal}
+        onClose={() => {
+          setShowRefundModal(false);
+          setRefundSubscription(null);
+        }}
+        className='fixed z-50 inset-0 overflow-y-auto'
+      >
+        <div className='flex items-center justify-center min-h-screen px-4'>
+          <div className='fixed inset-0 bg-black/70' aria-hidden='true' />
+          <div className='relative bg-gray-900 rounded-2xl p-8 w-full max-w-md mx-auto z-10 border border-white/10'>
+            <Dialog.Title className='text-xl font-bold text-white mb-4'>
+              Xác nhận hoàn tiền
+            </Dialog.Title>
+            <div className='text-white mb-6'>
+              Bạn có chắc chắn muốn hoàn tiền và hủy subscription của user{' '}
+              <span className='font-semibold'>{refundSubscription?.user.name}</span> không?
+              <br />
+              <br />
+              Plan: <span className='font-semibold'>{refundSubscription?.plan.name}</span>
+              <br />
+              Số tiền:{' '}
+              <span className='font-semibold'>
+                {refundSubscription &&
+                  formatCurrency(refundSubscription.amount, refundSubscription.currency)}
+              </span>
+              <br />
+              <br />
+              Hành động này sẽ hủy subscription và đánh dấu payment status là REFUNDED.
+            </div>
+            <div className='flex items-center justify-end space-x-4'>
+              <button
+                onClick={() => {
+                  setShowRefundModal(false);
+                  setRefundSubscription(null);
+                }}
+                className='px-5 py-2 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-colors'
+              >
+                Hủy bỏ
+              </button>
+              <button
+                onClick={() => {
+                  setCancelSubscription(refundSubscription);
+                  handleCancelSubscription(true);
+                }}
+                disabled={actionLoading}
+                className='px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                {actionLoading ? 'Đang hoàn tiền...' : 'Hoàn tiền'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+    </div>
+  );
+}

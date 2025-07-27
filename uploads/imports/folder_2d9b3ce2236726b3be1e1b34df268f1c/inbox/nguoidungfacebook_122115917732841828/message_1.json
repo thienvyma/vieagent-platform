@@ -1,0 +1,32 @@
+{
+  "participants": [
+    {
+      "name": "Ng\u00c6\u00b0\u00e1\u00bb\u009di d\u00c3\u00b9ng Facebook"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1747621038409,
+      "content": "D\u00e1\u00ba\u00a1 ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, b\u00e1\u00ba\u00a1n quan t\u00c3\u00a2m l\u00e1\u00bb\u009bp UI b\u00c3\u00aan TDC \u00e1\u00ba\u00a1 ?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1747621037411,
+      "content": "B\u00e1\u00ba\u00a1n \u00c4\u0091ang ph\u00e1\u00ba\u00a3n h\u00e1\u00bb\u0093i b\u00c3\u00acnh lu\u00e1\u00ba\u00adn c\u00e1\u00bb\u00a7a ng\u00c6\u00b0\u00e1\u00bb\u009di d\u00c3\u00b9ng v\u00e1\u00bb\u0081 b\u00c3\u00a0i vi\u00e1\u00ba\u00bft tr\u00c3\u00aan Trang c\u00e1\u00bb\u00a7a m\u00c3\u00acnh. Xem b\u00c3\u00acnh lu\u00e1\u00ba\u00adn.(https://facebook.com/100086744845401/posts/578904885011001/?comment_id=1351297412804908)",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Ng\u00c6\u00b0\u00e1\u00bb\u009di d\u00c3\u00b9ng Facebook",
+  "is_still_participant": false,
+  "thread_path": "inbox/nguoidungfacebook_122115917732841828",
+  "magic_words": [
+    
+  ]
+}

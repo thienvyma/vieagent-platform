@@ -1,0 +1,832 @@
+/**
+ * 🧩 ChromaDB Integration Library - Phase 2 Day 7 Step 7.4
+ * Stores vectors in ChromaDB với bulk insertion và search capabilities
+ * Support collection management, indexing strategy, và similarity search
+ */
+
+import { ChromaClient } from 'chromadb';
+
+// ChromaDB collection interface
+export interface ChromaCollection {
+  name: string;
+  id: string;
+  metadata: CollectionMetadata;
+  count: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Collection metadata interface
+export interface CollectionMetadata {
+  description: string;
+  embeddingModel: string;
+  embeddingDimension: number;
+  documentTypes: string[];
+  languages: string[];
+  indexingStrategy: string;
+  qualityThreshold: number;
+  version: string;
+  createdBy: string;
+  tags: string[];
+}
+
+// Vector storage result interface
+export interface VectorStorageResult {
+  collectionName: string;
+  storedVectors: number;
+  failedVectors: number;
+  processingTime: number;
+  metadata: StorageMetadata;
+  errors: StorageError[];
+  warnings: string[];
+  recommendations: string[];
+}
+
+// Storage metadata interface
+export interface StorageMetadata {
+  batchId: string;
+  totalBatches: number;
+  completedBatches: number;
+  failedBatches: number;
+  storageMethod: 'bulk' | 'batch' | 'stream';
+  indexingTime: number;
+  compressionRatio: number;
+  duplicatesDetected: number;
+  storedAt: string;
+  collectionSize: number;
+}
+
+// Storage error interface
+export interface StorageError {
+  vectorId: string;
+  error: string;
+  batchIndex: number;
+  timestamp: string;
+  recoverable: boolean;
+}
+
+// Search result interface
+export interface SearchResult {
+  id: string;
+  chunkId: string;
+  documentId: string;
+  content: string;
+  metadata: any;
+  similarity: number;
+  distance: number;
+  rank: number;
+}
+
+// Search query interface
+export interface SearchQuery {
+  query: string;
+  embedding?: number[];
+  filters?: SearchFilters;
+  limit?: number;
+  threshold?: number;
+  includeMetadata?: boolean;
+  includeContent?: boolean;
+}
+
+// Search filters interface
+export interface SearchFilters {
+  documentId?: string;
+  chunkType?: string;
+  language?: string;
+  qualityScore?: { min?: number; max?: number };
+  dateRange?: { start?: string; end?: string };
+  tags?: string[];
+  customFilters?: { [key: string]: any };
+}
+
+// ChromaDB options interface
+export interface ChromaDBOptions {
+  host: string;
+  port: number;
+  path: string;
+  ssl: boolean;
+  auth?: {
+    provider: string;
+    credentials: any;
+  };
+  embeddingFunction?: string;
+  defaultCollection: string;
+  batchSize: number;
+  maxRetries: number;
+  retryDelayMs: number;
+  timeoutMs: number;
+  enableCompression: boolean;
+  enableDuplicateDetection: boolean;
+  indexingStrategy: 'immediate' | 'batch' | 'lazy';
+  persistenceEnabled: boolean;
+  cacheSize: number;
+}
+
+// Default ChromaDB options
+const DEFAULT_OPTIONS: ChromaDBOptions = {
+  host: 'localhost',
+  port: 8000,
+  path: '/api/v1',
+  ssl: false,
+  embeddingFunction: 'openai',
+  defaultCollection: 'documents',
+  batchSize: 100,
+  maxRetries: 3,
+  retryDelayMs: 1000,
+  timeoutMs: 30000,
+  enableCompression: true,
+  enableDuplicateDetection: true,
+  indexingStrategy: 'batch',
+  persistenceEnabled: true,
+  cacheSize: 1000
+};
+
+// ChromaDB Manager class
+export class ChromaDBManager {
+  private client!: ChromaClient;
+  private options: ChromaDBOptions;
+  private collections: Map<string, any>;
+  private cache: Map<string, any>;
+
+  constructor(options: Partial<ChromaDBOptions> = {}) {
+    this.options = { ...DEFAULT_OPTIONS, ...options };
+    this.collections = new Map();
+    this.cache = new Map();
+    this.initializeClient();
+  }
+
+  private initializeClient(): void {
+    try {
+      // Initialize ChromaDB client
+      this.client = new ChromaClient({
+        path: `${this.options.ssl ? 'https' : 'http'}://${this.options.host}:${this.options.port}${this.options.path}`
+      });
+    } catch (error) {
+      console.error('Failed to initialize ChromaDB client:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create or get collection
+   */
+  async createCollection(
+    name: string,
+    metadata: Partial<CollectionMetadata> = {}
+  ): Promise<ChromaCollection> {
+    try {
+      const collectionMetadata = {
+        description: metadata.description || `Collection for ${name}`,
+        embeddingModel: metadata.embeddingModel || 'openai',
+        embeddingDimension: metadata.embeddingDimension || 1536,
+        documentTypes: metadata.documentTypes || [],
+        languages: metadata.languages || [],
+        indexingStrategy: metadata.indexingStrategy || 'batch',
+        qualityThreshold: metadata.qualityThreshold || 0.7,
+        version: metadata.version || '1.0',
+        createdBy: metadata.createdBy || 'system',
+        tags: metadata.tags || []
+      };
+
+      // Check if collection exists
+      let collection;
+      try {
+        collection = await this.client.getCollection({
+          name,
+        });
+      } catch (error) {
+        // Collection doesn't exist, create it
+        collection = await this.client.createCollection({
+          name,
+          metadata: collectionMetadata,
+        });
+      }
+
+      // Store collection reference
+      this.collections.set(name, collection);
+
+      return {
+        name,
+        id: collection.id,
+        metadata: collectionMetadata,
+        count: await collection.count(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+    } catch (error) {
+      throw new Error(`Failed to create collection ${name}: ${error.message}`);
+    }
+  }
+
+  /**
+   * Store vectors in ChromaDB
+   */
+  async storeVectors(
+    collectionName: string,
+    vectors: any[],
+    storageMethod: 'bulk' | 'batch' | 'stream' = 'batch'
+  ): Promise<VectorStorageResult> {
+    const startTime = Date.now();
+    const batchId = this.generateBatchId();
+
+    if (!vectors || vectors.length === 0) {
+      throw new Error('No vectors provided for storage');
+    }
+
+    // Get or create collection
+    let collection = this.collections.get(collectionName);
+    if (!collection) {
+      await this.createCollection(collectionName);
+      collection = this.collections.get(collectionName);
+    }
+
+    const errors: StorageError[] = [];
+    const warnings: string[] = [];
+    let storedVectors = 0;
+    let failedVectors = 0;
+
+    try {
+      // Process vectors based on storage method
+      switch (storageMethod) {
+        case 'bulk':
+          const bulkResult = await this.bulkStore(collection, vectors, batchId);
+          storedVectors = bulkResult.stored;
+          failedVectors = bulkResult.failed;
+          errors.push(...bulkResult.errors);
+          break;
+
+        case 'batch':
+          const batchResult = await this.batchStore(collection, vectors, batchId);
+          storedVectors = batchResult.stored;
+          failedVectors = batchResult.failed;
+          errors.push(...batchResult.errors);
+          break;
+
+        case 'stream':
+          const streamResult = await this.streamStore(collection, vectors, batchId);
+          storedVectors = streamResult.stored;
+          failedVectors = streamResult.failed;
+          errors.push(...streamResult.errors);
+          break;
+      }
+
+      // Generate metadata
+      const metadata = await this.generateStorageMetadata(
+        collection,
+        batchId,
+        vectors.length,
+        storedVectors,
+        storageMethod,
+        startTime
+      );
+
+      // Generate recommendations
+      const recommendations = this.generateStorageRecommendations(
+        storedVectors,
+        failedVectors,
+        errors
+      );
+
+      return {
+        collectionName,
+        storedVectors,
+        failedVectors,
+        processingTime: Date.now() - startTime,
+        metadata,
+        errors,
+        warnings,
+        recommendations
+      };
+    } catch (error) {
+      throw new Error(`Vector storage failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Bulk store vectors
+   */
+  private async bulkStore(
+    collection: any,
+    vectors: any[],
+    batchId: string
+  ): Promise<{ stored: number; failed: number; errors: StorageError[] }> {
+    const errors: StorageError[] = [];
+    let stored = 0;
+    let failed = 0;
+
+    try {
+      // Prepare data for bulk insertion
+      const ids = vectors.map(v => v.id);
+      const embeddings = vectors.map(v => v.embedding);
+      const metadatas = vectors.map(v => ({
+        chunkId: v.chunkId,
+        documentId: v.documentId,
+        content: v.content,
+        ...v.metadata,
+        batchId,
+        storedAt: new Date().toISOString()
+      }));
+
+      // Bulk insert
+      await collection.add({
+        ids,
+        embeddings,
+        metadatas
+      });
+
+      stored = vectors.length;
+    } catch (error) {
+      failed = vectors.length;
+      vectors.forEach((vector, index) => {
+        errors.push({
+          vectorId: vector.id,
+          error: error.message,
+          batchIndex: 0,
+          timestamp: new Date().toISOString(),
+          recoverable: true
+        });
+      });
+    }
+
+    return { stored, failed, errors };
+  }
+
+  /**
+   * Batch store vectors
+   */
+  private async batchStore(
+    collection: any,
+    vectors: any[],
+    batchId: string
+  ): Promise<{ stored: number; failed: number; errors: StorageError[] }> {
+    const errors: StorageError[] = [];
+    let stored = 0;
+    let failed = 0;
+
+    const batches = this.createBatches(vectors, this.options.batchSize);
+
+    for (let i = 0; i < batches.length; i++) {
+      const batch = batches[i];
+      
+      try {
+        // Prepare batch data
+        const ids = batch.map(v => v.id);
+        const embeddings = batch.map(v => v.embedding);
+        const metadatas = batch.map(v => ({
+          chunkId: v.chunkId,
+          documentId: v.documentId,
+          content: v.content,
+          ...v.metadata,
+          batchId,
+          batchIndex: i,
+          storedAt: new Date().toISOString()
+        }));
+
+        // Insert batch
+        await collection.add({
+          ids,
+          embeddings,
+          metadatas
+        });
+
+        stored += batch.length;
+      } catch (error) {
+        failed += batch.length;
+        batch.forEach(vector => {
+          errors.push({
+            vectorId: vector.id,
+            error: error.message,
+            batchIndex: i,
+            timestamp: new Date().toISOString(),
+            recoverable: true
+          });
+        });
+      }
+    }
+
+    return { stored, failed, errors };
+  }
+
+  /**
+   * Stream store vectors
+   */
+  private async streamStore(
+    collection: any,
+    vectors: any[],
+    batchId: string
+  ): Promise<{ stored: number; failed: number; errors: StorageError[] }> {
+    const errors: StorageError[] = [];
+    let stored = 0;
+    let failed = 0;
+
+    for (let i = 0; i < vectors.length; i++) {
+      const vector = vectors[i];
+      
+      try {
+        await collection.add({
+          ids: [vector.id],
+          embeddings: [vector.embedding],
+          metadatas: [{
+            chunkId: vector.chunkId,
+            documentId: vector.documentId,
+            content: vector.content,
+            ...vector.metadata,
+            batchId,
+            streamIndex: i,
+            storedAt: new Date().toISOString()
+          }]
+        });
+
+        stored++;
+      } catch (error) {
+        failed++;
+        errors.push({
+          vectorId: vector.id,
+          error: error.message,
+          batchIndex: i,
+          timestamp: new Date().toISOString(),
+          recoverable: true
+        });
+      }
+    }
+
+    return { stored, failed, errors };
+  }
+
+  /**
+   * Search vectors in ChromaDB
+   */
+  async searchVectors(
+    collectionName: string,
+    query: SearchQuery
+  ): Promise<SearchResult[]> {
+    try {
+      // Get collection
+      let collection = this.collections.get(collectionName);
+      if (!collection) {
+        throw new Error(`Collection ${collectionName} not found`);
+      }
+
+      // Generate query embedding if not provided
+      let queryEmbedding = query.embedding;
+      if (!queryEmbedding && query.query) {
+        // In real implementation, this would use the embedding function
+        queryEmbedding = await this.generateQueryEmbedding(query.query);
+      }
+
+      if (!queryEmbedding) {
+        throw new Error('Query embedding is required');
+      }
+
+      // Prepare search parameters
+      const searchParams: any = {
+        queryEmbeddings: [queryEmbedding],
+        nResults: query.limit || 10,
+        include: []
+      };
+
+      if (query.includeMetadata) {
+        searchParams.include.push('metadatas');
+      }
+
+      if (query.includeContent) {
+        searchParams.include.push('documents');
+      }
+
+      // Add filters if provided
+      if (query.filters) {
+        searchParams.where = this.buildWhereClause(query.filters);
+      }
+
+      // Execute search
+      const results = await collection.query(searchParams);
+
+      // Process results
+      const searchResults: SearchResult[] = [];
+      
+      if (results.ids && results.ids[0]) {
+        for (let i = 0; i < results.ids[0].length; i++) {
+          const result: SearchResult = {
+            id: results.ids[0][i],
+            chunkId: results.metadatas?.[0]?.[i]?.chunkId || '',
+            documentId: results.metadatas?.[0]?.[i]?.documentId || '',
+            content: results.documents?.[0]?.[i] || '',
+            metadata: results.metadatas?.[0]?.[i] || {},
+            similarity: 1 - (results.distances?.[0]?.[i] || 0),
+            distance: results.distances?.[0]?.[i] || 0,
+            rank: i + 1
+          };
+
+          // Filter by threshold if specified
+          if (query.threshold && result.similarity < query.threshold) {
+            continue;
+          }
+
+          searchResults.push(result);
+        }
+      }
+
+      return searchResults;
+    } catch (error) {
+      throw new Error(`Search failed: ${error.message}`);
+    }
+  }
+
+  /**
+   * Generate query embedding (mock implementation)
+   */
+  private async generateQueryEmbedding(query: string): Promise<number[]> {
+    // In real implementation, this would use the embedding function
+    // For testing, we'll generate a mock embedding
+    const embedding = new Array(1536).fill(0);
+    
+    // Simple hash-based embedding generation
+    let hash = 0;
+    for (let i = 0; i < query.length; i++) {
+      hash = ((hash << 5) - hash + query.charCodeAt(i)) & 0xffffffff;
+    }
+    
+    // Fill embedding with pseudo-random values
+    for (let i = 0; i < 1536; i++) {
+      hash = ((hash * 1664525) + 1013904223) & 0xffffffff;
+      embedding[i] = (hash / 0x100000000) * 2 - 1;
+    }
+    
+    // Normalize vector
+    const norm = Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0));
+    return embedding.map(val => val / norm);
+  }
+
+  /**
+   * Build WHERE clause for filters
+   */
+  private buildWhereClause(filters: SearchFilters): any {
+    const where: any = {};
+
+    if (filters.documentId) {
+      where.documentId = filters.documentId;
+    }
+
+    if (filters.chunkType) {
+      where.chunkType = filters.chunkType;
+    }
+
+    if (filters.language) {
+      where.language = filters.language;
+    }
+
+    if (filters.qualityScore) {
+      if (filters.qualityScore.min !== undefined) {
+        where.qualityScore = { $gte: filters.qualityScore.min };
+      }
+      if (filters.qualityScore.max !== undefined) {
+        where.qualityScore = { ...where.qualityScore, $lte: filters.qualityScore.max };
+      }
+    }
+
+    if (filters.tags && filters.tags.length > 0) {
+      where.tags = { $in: filters.tags };
+    }
+
+    if (filters.customFilters) {
+      Object.assign(where, filters.customFilters);
+    }
+
+    return Object.keys(where).length > 0 ? where : undefined;
+  }
+
+  /**
+   * Generate storage metadata
+   */
+  private async generateStorageMetadata(
+    collection: any,
+    batchId: string,
+    totalVectors: number,
+    storedVectors: number,
+    storageMethod: string,
+    startTime: number
+  ): Promise<StorageMetadata> {
+    const totalBatches = Math.ceil(totalVectors / this.options.batchSize);
+    const completedBatches = Math.ceil(storedVectors / this.options.batchSize);
+    const failedBatches = totalBatches - completedBatches;
+
+    return {
+      batchId,
+      totalBatches,
+      completedBatches,
+      failedBatches,
+      storageMethod: storageMethod as any,
+      indexingTime: Date.now() - startTime,
+      compressionRatio: this.options.enableCompression ? 0.7 : 1.0,
+      duplicatesDetected: 0,
+      storedAt: new Date().toISOString(),
+      collectionSize: await collection.count()
+    };
+  }
+
+  /**
+   * Generate storage recommendations
+   */
+  private generateStorageRecommendations(
+    storedVectors: number,
+    failedVectors: number,
+    errors: StorageError[]
+  ): string[] {
+    const recommendations: string[] = [];
+
+    if (failedVectors > storedVectors * 0.1) {
+      recommendations.push('High failure rate detected - consider reducing batch size');
+    }
+
+    if (errors.length > 0) {
+      recommendations.push('Errors detected - review error logs and consider retry strategies');
+    }
+
+    if (storedVectors > 10000) {
+      recommendations.push('Large collection - consider enabling compression and indexing optimization');
+    }
+
+    return recommendations;
+  }
+
+  /**
+   * Create batches from vectors
+   */
+  private createBatches(vectors: any[], batchSize: number): any[][] {
+    const batches: any[][] = [];
+    for (let i = 0; i < vectors.length; i += batchSize) {
+      batches.push(vectors.slice(i, i + batchSize));
+    }
+    return batches;
+  }
+
+  /**
+   * Generate batch ID
+   */
+  private generateBatchId(): string {
+    return `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Get collection info
+   */
+  async getCollectionInfo(collectionName: string): Promise<ChromaCollection | null> {
+    try {
+      const collection = this.collections.get(collectionName);
+      if (!collection) {
+        return null;
+      }
+
+      return {
+        name: collectionName,
+        id: collection.id,
+        metadata: collection.metadata || {},
+        count: await collection.count(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Failed to get collection info:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Delete collection
+   */
+  async deleteCollection(collectionName: string): Promise<boolean> {
+    try {
+      await this.client.deleteCollection({ name: collectionName });
+      this.collections.delete(collectionName);
+      return true;
+    } catch (error) {
+      console.error('Failed to delete collection:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Clear cache
+   */
+  clearCache(): void {
+    this.cache.clear();
+  }
+
+  /**
+   * Get cache size
+   */
+  getCacheSize(): number {
+    return this.cache.size;
+  }
+}
+
+// Utility functions
+export class ChromaDBUtils {
+  /**
+   * Validate vector dimensions
+   */
+  static validateVectorDimensions(vectors: any[], expectedDimension: number): boolean {
+    return vectors.every(vector => 
+      vector.embedding && vector.embedding.length === expectedDimension
+    );
+  }
+
+  /**
+   * Optimize batch size based on vector data
+   */
+  static optimizeBatchSize(vectors: any[], memoryLimit: number = 100): number {
+    if (vectors.length === 0) return 100;
+
+    const avgVectorSize = JSON.stringify(vectors[0]).length;
+    const vectorsPerMB = (1024 * 1024) / avgVectorSize;
+    const optimalBatchSize = Math.floor(vectorsPerMB * memoryLimit);
+
+    return Math.max(10, Math.min(1000, optimalBatchSize));
+  }
+
+  /**
+   * Calculate similarity score
+   */
+  static calculateSimilarity(distance: number): number {
+    return 1 - distance;
+  }
+
+  /**
+   * Filter results by quality
+   */
+  static filterResultsByQuality(results: SearchResult[], minQuality: number): SearchResult[] {
+    return results.filter(result => 
+      result.metadata.qualityScore >= minQuality
+    );
+  }
+
+  /**
+   * Group results by document
+   */
+  static groupResultsByDocument(results: SearchResult[]): Map<string, SearchResult[]> {
+    const groups = new Map<string, SearchResult[]>();
+    
+    results.forEach(result => {
+      const docId = result.documentId;
+      if (!groups.has(docId)) {
+        groups.set(docId, []);
+      }
+      groups.get(docId)!.push(result);
+    });
+    
+    return groups;
+  }
+
+  /**
+   * Calculate search statistics
+   */
+  static calculateSearchStats(results: SearchResult[]): any {
+    if (results.length === 0) return null;
+
+    const similarities = results.map(r => r.similarity);
+    const distances = results.map(r => r.distance);
+
+    return {
+      totalResults: results.length,
+      avgSimilarity: similarities.reduce((sum, sim) => sum + sim, 0) / similarities.length,
+      maxSimilarity: Math.max(...similarities),
+      minSimilarity: Math.min(...similarities),
+      avgDistance: distances.reduce((sum, dist) => sum + dist, 0) / distances.length,
+      documentCount: new Set(results.map(r => r.documentId)).size,
+      languageDistribution: this.getLanguageDistribution(results),
+      qualityDistribution: this.getQualityDistribution(results)
+    };
+  }
+
+  /**
+   * Get language distribution
+   */
+  private static getLanguageDistribution(results: SearchResult[]): any {
+    const distribution: any = {};
+    results.forEach(result => {
+      const lang = result.metadata.language || 'unknown';
+      distribution[lang] = (distribution[lang] || 0) + 1;
+    });
+    return distribution;
+  }
+
+  /**
+   * Get quality distribution
+   */
+  private static getQualityDistribution(results: SearchResult[]): any {
+    const distribution: any = { high: 0, medium: 0, low: 0 };
+    results.forEach(result => {
+      const quality = result.metadata.qualityScore || 0;
+      if (quality >= 0.8) distribution.high++;
+      else if (quality >= 0.6) distribution.medium++;
+      else distribution.low++;
+    });
+    return distribution;
+  }
+}
+
+// Export types and utilities
+export {
+  DEFAULT_OPTIONS as DEFAULT_CHROMADB_OPTIONS,
+  ChromaDBUtils
+}; 

@@ -1,0 +1,7 @@
+name,description,price,category
+"AI Agent Starter","Basic AI assistant với 5 agents và 1000 messages/tháng. Phù hợp cho startup và SME.","FREE","Basic Plan"
+"AI Agent Pro","Professional plan với 50 agents, unlimited messages, advanced analytics và email support.","$29/month","Professional Plan"  
+"AI Agent Enterprise","Enterprise solution với unlimited agents, dedicated infrastructure, 24/7 support và custom development.","Contact Sales","Enterprise Plan"
+"Custom Integration Service","Dịch vụ tích hợp custom với hệ thống CRM, ERP hiện có của khách hàng.","$500-2000","Professional Service"
+"Agent Training Workshop","Workshop 2 ngày training team về cách tạo và tối ưu AI agents hiệu quả.","$2000/session","Training Service"
+"24/7 Monitoring Package","Gói monitoring và maintenance AI agents 24/7 với SLA 99.9% uptime.","$200/month","Support Service" 

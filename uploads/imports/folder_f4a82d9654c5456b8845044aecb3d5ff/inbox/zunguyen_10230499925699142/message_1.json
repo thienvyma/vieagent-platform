@@ -1,0 +1,64 @@
+{
+  "participants": [
+    {
+      "name": "Zu Nguyen"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1736918015370,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1736918015067,
+      "content": "The Design Council would like to send you updates, which may be promotional. Learn More(https://www.facebook.com/help/messenger-app/564030381383143)",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1736918013616,
+      "content": "ZuTDC xin thay l\u00e1\u00bb\u009di c\u00e1\u00ba\u00a3m \u00c6\u00a1n \u00c4\u0091\u00e1\u00ba\u00bfn t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c b\u00e1\u00ba\u00a1n h\u00e1\u00bb\u008dc vi\u00c3\u00aan v\u00c3\u00a0 nh\u00e1\u00bb\u00afng ng\u00c6\u00b0\u00e1\u00bb\u009di \u00c4\u0091\u00c3\u00a3 lu\u00c3\u00b4n theo d\u00c3\u00b5i, quan t\u00c3\u00a2m \u00e1\u00bb\u00a7ng h\u00e1\u00bb\u0099 \u00c4\u0091\u00e1\u00ba\u00bfn TDC trong su\u00e1\u00bb\u0091t n\u00c4\u0083m 2024 v\u00e1\u00bb\u00aba qua b\u00e1\u00ba\u00b1ng ch\u00c6\u00b0\u00c6\u00a1ng tr\u00c3\u00acnh \u00c6\u00b0u \u00c4\u0091\u00c3\u00a3i - gi\u00e1\u00ba\u00a3m gi\u00c3\u00a1 tr\u00e1\u00bb\u00b1c ti\u00e1\u00ba\u00bfp 20% cho t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c g\u00c3\u00b3i Membership",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1736745195397,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Zu Nguyen",
+      "timestamp_ms": 1736745194854,
+      "photos": [
+        {
+          "uri": "this_profile's_activity_across_facebook/messages/inbox/zunguyen_10230499925699142/photos/472434116_1113982086596952_80459416910682708_n_1113982083263619.png",
+          "creation_timestamp": 1736745192
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Zu Nguyen",
+      "timestamp_ms": 1736745193581,
+      "content": "c\u00e1\u00ba\u00a3m \u00c6\u00a1n v\u00c3\u00ac chia s\u00e1\u00ba\u00bb b\u00e1\u00ba\u00a3ng layout solution - m\u00c3\u00acnh v\u00c3\u00a0o gg drive th\u00c3\u00ac th\u00e1\u00ba\u00a5y hi\u00e1\u00bb\u0087n t\u00e1\u00ba\u00a1i c\u00c3\u00b3 nhi\u00e1\u00bb\u0081u file duplicated s\u00e1\u00ba\u00bd t\u00e1\u00bb\u0091n d\u00e1\u00bb\u00af li\u00e1\u00bb\u0087u c\u00e1\u00bb\u00a7a page",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Zu Nguyen",
+  "is_still_participant": false,
+  "thread_path": "inbox/zunguyen_10230499925699142",
+  "magic_words": [
+    
+  ]
+}

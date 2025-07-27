@@ -1,0 +1,59 @@
+{
+  "participants": [
+    {
+      "name": "Chuong Le"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1732865912798,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1732865912568,
+      "content": "The Design Council would like to send you updates, which may be promotional. Learn More(https://www.facebook.com/help/messenger-app/564030381383143)",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1732865911546,
+      "content": "Chuong, S\u00e1\u00ba\u00afp t\u00e1\u00bb\u009bi \u00c4\u0091\u00c3\u00a2y TDC s\u00e1\u00ba\u00bd t\u00e1\u00bb\u0095 ch\u00e1\u00bb\u00a9c Live Class v\u00c3\u00a0 Design Talk v\u00e1\u00bb\u009bi t\u00e1\u00ba\u00a7n su\u00e1\u00ba\u00a5t cao v\u00c3\u00a0 nhi\u00e1\u00bb\u0081u n\u00e1\u00bb\u0099i dung m\u00e1\u00bb\u009bi ho\u00c3\u00a0n to\u00c3\u00a0n mi\u00e1\u00bb\u0085n ph\u00c3\u00ad d\u00c3\u00a0nh cho h\u00e1\u00bb\u008dc vi\u00c3\u00aan v\u00c3\u00a0 ng\u00c6\u00b0\u00e1\u00bb\u009di theo d\u00c3\u00b5i. \nB\u00e1\u00ba\u00a5m v\u00c3\u00a0o Nh\u00e1\u00ba\u00adn th\u00c3\u00b4ng tin m\u00e1\u00bb\u009bi \u00c4\u0091\u00e1\u00bb\u0083 kh\u00c3\u00b4ng b\u00e1\u00bb\u008f l\u00e1\u00bb\u00a1 c\u00c3\u00a1c l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc b\u00e1\u00bb\u0095 \u00c3\u00adch nh\u00c3\u00a9 !",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Chuong Le",
+      "timestamp_ms": 1732693198230,
+      "content": "Hi\u00e1\u00bb\u0087n t\u00e1\u00ba\u00a1i c\u00c3\u00b4ng ty b\u00c3\u00aan Ch\u00c6\u00b0\u00c6\u00a1ng \u00c4\u0091ang tuy\u00e1\u00bb\u0083n d\u00e1\u00bb\u00a5ng v\u00e1\u00bb\u008b tr\u00c3\u00ad Graphic Designer chuy\u00c3\u00aan v\u00e1\u00bb\u0081 bao b\u00c3\u00ac v\u00c3\u00a0 t\u00c3\u00a0i li\u00e1\u00bb\u0087u. Kh\u00c3\u00b4ng bi\u00e1\u00ba\u00bft c\u00c3\u00b3 th\u00e1\u00bb\u0083 nh\u00e1\u00bb\u009d TDC chia s\u00e1\u00ba\u00bb \u00c4\u0091\u00e1\u00ba\u00bfn c\u00c3\u00a1c h\u00e1\u00bb\u008dc vi\u00c3\u00aan c\u00e1\u00bb\u00a7a b\u00c3\u00aan b\u00e1\u00ba\u00a1n kh\u00c3\u00b4ng \u00e1\u00ba\u00a1?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1732693174917,
+      "content": "D\u00e1\u00ba\u00a1 ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n \u00e1\u00ba\u00a1, kh\u00c3\u00b4ng bi\u00e1\u00ba\u00bft b\u00e1\u00ba\u00a1n \u00c4\u0091ang quan t\u00c3\u00a2m \u00c4\u0091\u00e1\u00ba\u00bfn l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc n\u00c3\u00a0o t\u00e1\u00ba\u00a1i TDC \u00e1\u00ba\u00a1? M\u00c3\u00acnh h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 t\u00c6\u00b0 v\u00e1\u00ba\u00a5n cho b\u00e1\u00ba\u00a1n nh\u00c3\u00a9.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Chuong Le",
+      "timestamp_ms": 1732693089984,
+      "content": "Xin ch\u00c3\u00a0o \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Chuong Le",
+  "is_still_participant": false,
+  "thread_path": "inbox/chuongle_9055697274469364",
+  "magic_words": [
+    
+  ]
+}

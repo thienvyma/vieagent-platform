@@ -1,0 +1,530 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+// =============================================================================
+// 👤 USER MANAGEMENT MODELS
+// =============================================================================
+
+model User {
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  name                 String?
+  password             String?
+  role                 String                @default("USER")
+  plan                 String                @default("TRIAL")
+  isActive             Boolean               @default(true)
+  image                String?
+  reputation           Int                   @default(0)
+  verified             Boolean               @default(false)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  
+  // Relationships
+  agents               Agent[]
+  conversations        Conversation[]
+  documents            Document[]
+  googleAccounts       GoogleAccount[]
+  apiKeys              UserApiKey[]
+  knowledge            Knowledge[]           @relation("UserKnowledge")
+  profile              UserProfile?
+  settings             UserSettings?
+  feedbacks            UserFeedback[]
+  subscriptions        Subscription[]
+  
+  // Admin relationships
+  adminLogs            AdminLog[]
+  announcements        Announcement[]
+  blogs                Blog[]
+  
+  @@map("users")
+  @@index([email])
+  @@index([plan])
+  @@index([role])
+  @@index([createdAt])
+}
+
+model UserProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  firstName String?
+  lastName  String?
+  company   String?
+  jobTitle  String?
+  phone     String?
+  avatar    String?
+  bio       String?
+  website   String?
+  location  String?
+  timezone  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model UserSettings {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  theme                String   @default("dark")
+  language             String   @default("vi")
+  timezone             String   @default("Asia/Ho_Chi_Minh")
+  emailNotifications   Boolean  @default(true)
+  browserNotifications Boolean  @default(false)
+  weeklyReport         Boolean  @default(true)
+  defaultModel         String   @default("gpt-3.5-turbo")
+  defaultTemperature   Float    @default(0.7)
+  defaultMaxTokens     Int      @default(1000)
+  profileVisible       Boolean  @default(false)
+  dataSharing          Boolean  @default(false)
+  analyticsOptIn       Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+// =============================================================================
+// 🤖 AGENT MODELS
+// =============================================================================
+
+model Agent {
+  id                      String                @id @default(cuid())
+  name                    String
+  description             String?
+  prompt                  String
+  model                   String                @default("gpt-3.5-turbo")
+  temperature             Float                 @default(0.7)
+  maxTokens               Int                   @default(1000)
+  status                  String                @default("ACTIVE")
+  isPublic                Boolean               @default(false)
+  userId                  String
+  knowledgeFiles          String?               @default("[]")
+  
+  // Smart Knowledge Strategy
+  knowledgeStrategy       String                @default("AUTO")
+  knowledgeStrategyConfig String?               @default("{}")
+  knowledgeFilePriorities String?               @default("{}")
+  autoStrategySettings    String?               @default("{}")
+  
+  // Message Delay Settings
+  messageDelayMs          Int?                  @default(2000)
+  enableSmartDelay        Boolean               @default(true)
+  maxDelayMs              Int?                  @default(8000)
+  minDelayMs              Int?                  @default(500)
+  enableVietnameseMode    Boolean               @default(true)
+  
+  // Auto Handover Settings
+  enableAutoHandover      Boolean               @default(false)
+  handoverTriggers        String?               @default("{}")
+  handoverThresholds      String?               @default("{}")
+  
+  // Google Integration
+  enableGoogleIntegration Boolean               @default(false)
+  googleServices          String?               @default("{}")
+  smartSchedulingDuration Int?                  @default(60)
+  
+  // Model Configuration
+  modelProvider           String                @default("openai")
+  fallbackModel           String?
+  multiModelSupport       Boolean               @default(false)
+  
+  // RAG Configuration
+  enableRAG               Boolean               @default(false)
+  ragThreshold            Float                 @default(0.7)
+  ragMaxDocuments         Int                   @default(5)
+  ragSearchType           String                @default("SEMANTIC")
+  ragChunkSize            Int                   @default(500)
+  ragOverlapSize          Int                   @default(50)
+  
+  // Learning Configuration
+  enableAutoLearning      Boolean               @default(false)
+  learningMode            String                @default("PASSIVE")
+  learningThreshold       Float                 @default(0.8)
+  learningFeedbackWeight  Float                 @default(0.5)
+  learningRetentionDays   Int                   @default(30)
+  
+  // Vector Configuration
+  embeddingModel          String                @default("text-embedding-3-small")
+  embeddingDimensions     Int                   @default(1536)
+  vectorCollectionName    String?
+  
+  // Performance Configuration
+  responseTimeoutMs       Int                   @default(30000)
+  concurrentRequests      Int                   @default(5)
+  cacheTTL                Int                   @default(3600)
+  enableResponseCaching   Boolean               @default(true)
+  
+  // Advanced Features
+  enableFunctionCalling   Boolean               @default(false)
+  availableFunctions      String                @default("[]")
+  contextWindowSize       Int                   @default(4096)
+  enableStreaming         Boolean               @default(false)
+  
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  
+  // Relationships
+  user                    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations           Conversation[]
+  knowledgeAssignments    KnowledgeAgentAssignment[] @relation("AgentKnowledge")
+
+  @@map("agents")
+  @@index([userId])
+  @@index([status])
+  @@index([isPublic])
+  @@index([modelProvider])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// 📚 KNOWLEDGE MANAGEMENT MODELS
+// =============================================================================
+
+model Knowledge {
+  id                    String   @id @default(cuid())
+  title                 String
+  content               String   
+  summary               String?
+  type                  KnowledgeType
+  subtype               String?
+  format                String   @default("TEXT")
+  
+  // Source information
+  sourceType            String   @default("UPLOAD")
+  sourceUrl             String?
+  sourceMetadata        Json?
+  
+  // Processing & AI
+  processingStatus      ProcessingStatus @default(PENDING)
+  vectorStatus          VectorStatus @default(PENDING)
+  embeddingModel        String?
+  embeddingDimensions   Int?
+  
+  // Categorization
+  category              String?
+  tags                  String   @default("[]")
+  topics                String?
+  entities              String?
+  
+  // Quality & Analytics
+  qualityScore          Float?
+  confidenceScore       Float?
+  relevanceScore        Float?
+  viewCount             Int      @default(0)
+  downloadCount         Int      @default(0)
+  shareCount            Int      @default(0)
+  
+  // User & Agent Assignments
+  userId                String
+  user                  User     @relation("UserKnowledge", fields: [userId], references: [id], onDelete: Cascade)
+  agentAssignments      KnowledgeAgentAssignment[] @relation("KnowledgeAssignments")
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("knowledge")
+  @@index([userId])
+  @@index([type])
+  @@index([processingStatus])
+  @@index([vectorStatus])
+  @@index([createdAt])
+}
+
+model KnowledgeAgentAssignment {
+  id          String   @id @default(cuid())
+  knowledgeId String
+  agentId     String
+  priority    Float    @default(1.0)
+  isActive    Boolean  @default(true)
+  
+  knowledge   Knowledge @relation("KnowledgeAssignments", fields: [knowledgeId], references: [id], onDelete: Cascade)
+  agent       Agent     @relation("AgentKnowledge", fields: [agentId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([knowledgeId, agentId])
+  @@map("knowledge_agent_assignments")
+}
+
+// =============================================================================
+// 💬 CONVERSATION MODELS
+// =============================================================================
+
+model Conversation {
+  id        String    @id @default(cuid())
+  title     String?
+  agentId   String
+  userId    String
+  status    String    @default("ACTIVE")
+  metadata  Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  agent     Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@map("conversations")
+  @@index([userId])
+  @@index([agentId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  content        String
+  role           String       // 'user', 'assistant', 'system'
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+  @@index([conversationId])
+  @@index([role])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// 🔗 GOOGLE INTEGRATION MODELS
+// =============================================================================
+
+model GoogleAccount {
+  id           String   @id @default(cuid())
+  userId       String
+  googleId     String   @unique
+  email        String
+  name         String?
+  picture      String?
+  accessToken  String
+  refreshToken String?
+  tokenExpiry  DateTime?
+  scopes       String
+  isActive     Boolean  @default(true)
+  lastSync     DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_accounts")
+  @@index([userId])
+  @@index([googleId])
+  @@index([email])
+}
+
+// =============================================================================
+// 💳 SUBSCRIPTION & BILLING MODELS
+// =============================================================================
+
+model Subscription {
+  id                String   @id @default(cuid())
+  userId            String
+  planId            String
+  status            String   // 'active', 'canceled', 'past_due', etc.
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd Boolean  @default(false)
+  stripeSubscriptionId String? @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+  @@index([userId])
+  @@index([status])
+  @@index([stripeSubscriptionId])
+}
+
+// =============================================================================
+// 🔑 API KEYS MODEL
+// =============================================================================
+
+model UserApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  provider    String   // 'openai', 'anthropic', 'google'
+  keyHash     String   // Encrypted API key
+  models      String   @default("[]") // JSON array of available models
+  isActive    Boolean  @default(true)
+  lastUsed    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_api_keys")
+  @@index([userId])
+  @@index([provider])
+  @@index([isActive])
+}
+
+// =============================================================================
+// 📄 DOCUMENT MODEL
+// =============================================================================
+
+model Document {
+  id           String   @id @default(cuid())
+  userId       String
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  path         String
+  url          String?
+  
+  // Processing fields
+  status       String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  extractedText String?
+  metadata     Json?
+  
+  // Content analysis
+  title        String?
+  description  String?
+  content      String?
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  processedAt  DateTime?
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+  @@index([userId])
+  @@index([status])
+  @@index([mimeType])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// 🛡️ ADMIN MODELS
+// =============================================================================
+
+model AdminLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admin_logs")
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  type        String   @default("info") // info, warning, success, error
+  isActive    Boolean  @default(true)
+  targetRoles String   @default("[]") // JSON array of target roles
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("announcements")
+  @@index([isActive])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model Blog {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String?
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  viewCount   Int      @default(0)
+  likeCount   Int      @default(0)
+  tags        String   @default("[]") // JSON array
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+  
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("blog_posts")
+  @@index([published])
+  @@index([featured])
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([slug])
+}
+
+model UserFeedback {
+  id         String   @id @default(cuid())
+  userId     String
+  type       String
+  subject    String
+  message    String
+  rating     Int?
+  status     String   @default("open")
+  priority   String   @default("medium")
+  userAgent  String?
+  url        String?
+  screenshot String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_feedbacks")
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// =============================================================================
+// 📊 ENUMS
+// =============================================================================
+
+enum KnowledgeType {
+  DOCUMENT
+  WEBSITE
+  API_RESPONSE
+  USER_INPUT
+  CONVERSATION
+  LEARNING_DATA
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  RETRYING
+}
+
+enum VectorStatus {
+  PENDING
+  EMBEDDING
+  STORED
+  FAILED
+  INDEXED
+} 

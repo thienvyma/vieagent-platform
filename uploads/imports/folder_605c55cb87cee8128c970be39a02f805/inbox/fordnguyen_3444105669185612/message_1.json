@@ -1,0 +1,370 @@
+{
+  "participants": [
+    {
+      "name": "Ford Nguyen"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1740020753050,
+      "content": "D\u00e1\u00ba\u00a1 v\u00e1\u00ba\u00abn \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c b\u00e1\u00ba\u00a1n nha b\u00e1\u00ba\u00a1n c\u00c3\u00b3 th\u00e1\u00bb\u0083 truy c\u00e1\u00ba\u00adp xem video trong 12 th\u00c3\u00a1ng nh\u00c3\u00a9",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Ford Nguyen"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739971272235,
+      "content": "sau khi qua 2 th\u00c3\u00a1ng h\u00e1\u00bb\u008dc \u00e1\u00ba\u00a5y \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739971259351,
+      "content": "cho e h\u00e1\u00bb\u008fi l\u00c3\u00a0 link n\u00c3\u00a0y e v\u00e1\u00ba\u00abn d\u00c3\u00b9ng \u00c4\u0091\u00e1\u00bb\u0083 xem l\u00e1\u00ba\u00a1i v\u00e1\u00bb\u0081 sau \u00c4\u0091c k \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739948368826,
+      "content": "Ngo\u00c3\u00a0i ra, b\u00e1\u00ba\u00a1n c\u00e1\u00bb\u00a9 xem qua l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc \u00e1\u00ba\u00a3o m\u00c3\u00acnh g\u00e1\u00bb\u00adi \u00c4\u0091\u00e1\u00ba\u00bfn b\u00e1\u00ba\u00a1n tr\u00c6\u00b0\u00e1\u00bb\u009bc nh\u00c3\u00a9, b\u00e1\u00ba\u00a1n c\u00c3\u00b3 th\u00e1\u00ba\u00afc m\u00e1\u00ba\u00afc n\u00c3\u00a0o b\u00e1\u00ba\u00a1n c\u00e1\u00bb\u00a9 nh\u00e1\u00ba\u00afn m\u00c3\u00acnh, m\u00c3\u00acnh h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 b\u00e1\u00ba\u00a1n nha",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739948336873,
+      "content": "B\u00e1\u00ba\u00a1n \u00c6\u00a1i, b\u00e1\u00ba\u00a1n ki\u00e1\u00bb\u0083m tra email gi\u00c3\u00bap m\u00c3\u00acnh nh\u00c3\u00a9 <3 M\u00c3\u00acnh c\u00c3\u00b3 g\u00e1\u00bb\u00adi \u00c4\u0091\u00e1\u00ba\u00bfn b\u00e1\u00ba\u00a1n m\u00e1\u00bb\u0099t b\u00e1\u00ba\u00a3n NDA, \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u009dng link l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc, b\u00e1\u00ba\u00a1n xem qua gi\u00c3\u00bap m\u00c3\u00acnh v\u00c3\u00a0 g\u00e1\u00bb\u00adi l\u00e1\u00ba\u00a1i b\u00e1\u00ba\u00a1n NDA \u00c4\u0091\u00c3\u00a3 k\u00c3\u00bd qua l\u00e1\u00ba\u00a1i email nh\u00c3\u00a9.",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Ford Nguyen"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739936941211,
+      "content": "D\u00e1\u00ba\u00a1 trong tr\u00c6\u00b0a nay m\u00c3\u00acnh s\u00e1\u00ba\u00bd g\u00e1\u00bb\u00adi cho b\u00e1\u00ba\u00a1n l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc nh\u00c3\u00a9 \u00e2\u009d\u00a4\u00ef\u00b8\u008f",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Ford Nguyen"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739936828754,
+      "content": "v b\u00c3\u00a2y gi\u00e1\u00bb\u009d b\u00e1\u00ba\u00aft \u00c4\u0091\u00e1\u00ba\u00a7u h\u00e1\u00bb\u008dc l\u00c3\u00a0 m\u00c3\u00acnh g\u00e1\u00bb\u00adi link cho e hay sao \u00e1\u00ba\u00a1",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "The Design Council"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739936775328,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739936774201,
+      "content": "d\u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739841476539,
+      "content": "D\u00e1\u00ba\u00a1 b\u00c3\u00aan m\u00c3\u00acnh \u00c4\u0091\u00c3\u00a3 nh\u00e1\u00ba\u00adn \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c \u00e1\u00ba\u00a1",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Ford Nguyen"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739824155156,
+      "content": "D\u00e1\u00ba\u00a1 s\u00c3\u00a1ng \u00c4\u0091\u00e1\u00ba\u00bfn gi\u00e1\u00bb\u009d l\u00c3\u00a0m vi\u00e1\u00bb\u0087c k\u00e1\u00ba\u00bf to\u00c3\u00a1n b\u00c3\u00aan m\u00c3\u00acnh s\u00e1\u00ba\u00bd ki\u00e1\u00bb\u0083m tra nh\u00c3\u00a9 b\u00e1\u00ba\u00a1n \u00c6\u00a1i. C\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00e1\u00ba\u00a1 \u00e2\u009d\u00a4\u00ef\u00b8\u008f",
+      "reactions": [
+        {
+          "reaction": "\u00e2\u009d\u00a4",
+          "actor": "Ford Nguyen"
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739824130972,
+      "content": "m\u00c3\u00a0 e qu\u00c3\u00aan s\u00e1\u00bb\u00ada n\u00e1\u00bb\u0099i dung ck m\u00e1\u00ba\u00a5t r\u00c3\u00b9i",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739824122319,
+      "content": "e chuy\u00e1\u00bb\u0083n r \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739824107026,
+      "photos": [
+        {
+          "uri": "this_profile's_activity_across_facebook/messages/inbox/fordnguyen_3444105669185612/photos/478385440_2066127493837999_8430511870430153837_n_1152878883103911.jpg",
+          "creation_timestamp": 1739824105
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739820459125,
+      "content": "D\u00e1\u00ba\u00a1 6B book coach c\u00e1\u00bb\u00a7a b\u00e1\u00ba\u00a1n l\u00c3\u00a0 600.000\u00e2\u0082\u00ab nh\u00c3\u00a9. Sau khi CK b\u00e1\u00ba\u00a1n cho m\u00c3\u00acnh xin \u00e1\u00ba\u00a3nh x\u00c3\u00a1c nh\u00e1\u00ba\u00adn v\u00e1\u00bb\u009bi h\u00e1\u00bb\u0087 th\u00e1\u00bb\u0091ng nh\u00c3\u00a9",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739820424324,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739820423471,
+      "content": "D\u00c6\u00b0\u00e1\u00bb\u009bi \u00c4\u0091\u00c3\u00a2y l\u00c3\u00a0 th\u00c3\u00b4ng tin chuy\u00e1\u00bb\u0083n kho\u00e1\u00ba\u00a3n c\u00e1\u00bb\u00a7a TDC cho vi\u00e1\u00bb\u0087c thanh to\u00c3\u00a1n h\u00e1\u00bb\u008dc ph\u00c3\u00ad:\n\nSTK: 7539666639 \nTechcombank\nHuynh Thi Hong Phuong\nN\u00e1\u00bb\u0099i dung: T\u00c3\u00aan - S\u00c4\u0090T - 6B Booking LS",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739820369812,
+      "content": "D\u00e1\u00ba\u00a1 \u00e1\u00bb\u009f tr\u00c3\u00aan tin nh\u00e1\u00ba\u00afn l\u00c3\u00a0 ph\u00e1\u00ba\u00a7n TDC c\u00c3\u00b3 th\u00e1\u00bb\u0083 h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 t\u00e1\u00bb\u0091i \u00c4\u0091a gi\u00c3\u00bap b\u00e1\u00ba\u00a1n r\u00e1\u00bb\u0093i \u00e1\u00ba\u00a1 ^^ ph\u00e1\u00ba\u00a7n ph\u00c3\u00ad 6B c\u00c3\u00b2n l\u00e1\u00ba\u00a1i b\u00e1\u00ba\u00a1n gi\u00c3\u00bap TDC thanh to\u00c3\u00a1n theo stk n\u00c3\u00a0y nh\u00c3\u00a9.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739817118489,
+      "content": "do em \u00c4\u0091ang c\u00c3\u00b2n l\u00c3\u00a0 sinh vi\u00c3\u00aan \u00c3\u00ad TT",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739817100880,
+      "content": "m\u00c3\u00a0 m\u00c3\u00acnh c\u00c3\u00b3 th\u00e1\u00bb\u0083 h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 em th\u00c3\u00aam hong \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739817086188,
+      "content": "d\u00e1\u00ba\u00a1 \u00c4\u0091\u00c3\u00bang r\u00e1\u00bb\u0093i \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739783559752,
+      "content": "D\u00e1\u00ba\u00a1 l\u00c3\u00a0 m\u00c3\u00acnh thanh to\u00c3\u00a1n 6B coach lu\u00c3\u00b4n \u00c4\u0091\u00c3\u00bang kh\u00c3\u00b4ng \u00e1\u00ba\u00a1?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739782505061,
+      "content": "v m\u00c3\u00acnh cho e \u00c4\u0091ki h\u00e1\u00bb\u008dc l\u00e1\u00ba\u00a1i lu\u00c3\u00b4n v\u00e1\u00bb\u009bi \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739782479046,
+      "content": "d\u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739772991629,
+      "content": "C\u00c3\u00b2n 6 bu\u00e1\u00bb\u0095i coach c\u00c3\u00b2n l\u00e1\u00ba\u00a1i th\u00c3\u00ac b\u00e1\u00ba\u00a1n n\u00e1\u00ba\u00bfu b\u00e1\u00ba\u00a1n mu\u00e1\u00bb\u0091n book coach \u00c4\u0091\u00e1\u00bb\u0083 s\u00e1\u00bb\u00ada b\u00c3\u00a0i th\u00c3\u00ac b\u00e1\u00ba\u00a1n thanh to\u00c3\u00a1n th\u00c3\u00aam chi ph\u00c3\u00ad book coach nh\u00c3\u00a9.\n\n\u00c4\u0090\u00e1\u00bb\u0083 h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 b\u00e1\u00ba\u00a1n t\u00e1\u00bb\u0091t h\u00c6\u00a1n th\u00c3\u00ac TDC s\u00e1\u00ba\u00bd h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 b\u00e1\u00ba\u00a1n 50% ph\u00c3\u00ad cho 1 bu\u00e1\u00bb\u0095i book coach. B\u00e1\u00ba\u00a1n ch\u00e1\u00bb\u0089 c\u00e1\u00ba\u00a7n thanh to\u00c3\u00a1n 100.000\u00c4\u0091 cho 1 Bu\u00e1\u00bb\u0095i book coaching v\u00e1\u00bb\u009bi Mentor nh\u00c3\u00a9.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739772831324,
+      "content": "D\u00e1\u00ba\u00a1 ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, theo th\u00c3\u00b4ng tin m\u00c3\u00acnh ki\u00e1\u00bb\u0083m tra th\u00c3\u00ac b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 submit \u00c4\u0091\u00c6\u00a1n b\u00e1\u00ba\u00a3o l\u00c6\u00b0u t\u00e1\u00bb\u00ab 09/01/2024. \u00c4\u0090\u00e1\u00ba\u00bfn nay l\u00c3\u00a0 \u00c4\u0091\u00c3\u00a3 qu\u00c3\u00a1 h\u00e1\u00ba\u00a1n b\u00e1\u00ba\u00a3o l\u00c6\u00b0u 12 th\u00c3\u00a1ng. Tuy nhi\u00c3\u00aan m\u00c3\u00acnh h\u00e1\u00bb\u0097 tr\u00e1\u00bb\u00a3 b\u00e1\u00ba\u00a1n th\u00c3\u00aam 2 th\u00c3\u00a1ng h\u00e1\u00bb\u008dc v\u00c3\u00a0 4 Bu\u00e1\u00bb\u0095i Coach v\u00e1\u00bb\u009bi Mentor nha b\u00e1\u00ba\u00a1n.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1739621341794,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1739621340231,
+      "content": "d\u00e1\u00ba\u00a1 m\u00c3\u00acnh ki\u00e1\u00bb\u0083m tra cho e v\u00e1\u00bb\u009bi \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737617068002,
+      "content": "D\u00e1\u00ba\u00a1 b\u00e1\u00ba\u00a1n \u00c4\u0091\u00e1\u00bb\u00a3i m\u00c3\u00acnh ki\u00e1\u00bb\u0083m tra th\u00c3\u00b4ng tin b\u00e1\u00ba\u00a3o l\u00c6\u00b0u m\u00e1\u00bb\u0099t ch\u00c3\u00bat nh\u00c3\u00a9",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1737615240248,
+      "content": "h\u00c3\u00b4m b\u00e1\u00bb\u00afa l\u00c3\u00a0 e b\u00e1\u00ba\u00a3o l\u00c6\u00b0u l\u00e1\u00bb\u009bp LS3 \u00e1\u00ba\u00a5y \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1737615230928,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1737615229274,
+      "content": "ad \u00c6\u00a1i cho e dki h\u00e1\u00bb\u008dc l\u00e1\u00ba\u00a1i l\u00e1\u00bb\u009bp b\u00e1\u00ba\u00a3o l\u00c6\u00b0u v\u00e1\u00bb\u009bi \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1735533299710,
+      "content": "Ford \u00c6\u00a1i, TDC's New Year Promotion: Gi\u00e1\u00ba\u00a3m 20% t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c g\u00c3\u00b3i Membership t\u00e1\u00ba\u00a1i TDC\n\u00e2\u008f\u00a4\n\u00f0\u009f\u00a7\u00a7 Nh\u00c3\u00a2n d\u00e1\u00bb\u008bp n\u00c4\u0083m m\u00e1\u00bb\u009bi 2025, TDC xin thay l\u00e1\u00bb\u009di c\u00e1\u00ba\u00a3m \u00c6\u00a1n \u00c4\u0091\u00e1\u00ba\u00bfn t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c b\u00e1\u00ba\u00a1n h\u00e1\u00bb\u008dc vi\u00c3\u00aan v\u00c3\u00a0 nh\u00e1\u00bb\u00afng ng\u00c6\u00b0\u00e1\u00bb\u009di \u00c4\u0091\u00c3\u00a3 lu\u00c3\u00b4n theo d\u00c3\u00b5i, quan t\u00c3\u00a2m \u00e1\u00bb\u00a7ng h\u00e1\u00bb\u0099 \u00c4\u0091\u00e1\u00ba\u00bfn TDC trong su\u00e1\u00bb\u0091t n\u00c4\u0083m 2024 v\u00e1\u00bb\u00aba qua b\u00e1\u00ba\u00b1ng ch\u00c6\u00b0\u00c6\u00a1ng tr\u00c3\u00acnh \u00c6\u00b0u \u00c4\u0091\u00c3\u00a3i - gi\u00e1\u00ba\u00a3m gi\u00c3\u00a1 tr\u00e1\u00bb\u00b1c ti\u00e1\u00ba\u00bfp 20% cho t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c g\u00c3\u00b3i Membership b\u00e1\u00ba\u00a5t k\u00e1\u00bb\u00b3 t\u00e1\u00ba\u00a1i TDC d\u00e1\u00bb\u00b1a tr\u00c3\u00aan gi\u00c3\u00a1 c\u00c3\u00b4ng b\u00e1\u00bb\u0091.\n\n\u00f0\u009f\u0093\u0086 Th\u00e1\u00bb\u009di gian \u00c4\u0091\u00c4\u0083ng k\u00c3\u00bd: T\u00e1\u00bb\u00ab ng\u00c3\u00a0y 13/12/2024 \u00c4\u0091\u00e1\u00ba\u00bfn tr\u00c6\u00b0\u00e1\u00bb\u009bc ng\u00c3\u00a0y 25/01/2025.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1735533298335,
+      "content": "B\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 g\u00e1\u00bb\u00adi m\u00e1\u00bb\u0099t file \u00c4\u0091\u00c3\u00adnh k\u00c3\u00a8m.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1726369814936,
+      "content": "Nh\u00e1\u00ba\u00adn ngay E-Voucher c\u00c3\u00a1c l\u00e1\u00bb\u009bp ho\u00e1\u00ba\u00b7c c\u00c3\u00a1c bu\u00e1\u00bb\u0095i h\u00e1\u00bb\u008dc 1 on 1 khi d\u00c3\u00a0nh 5ph\u00c3\u00bat th\u00e1\u00bb\u00b1c hi\u00e1\u00bb\u0087n kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t c\u00c3\u00b9ng TDC ch\u00e1\u00bb\u0089 d\u00c3\u00a0nh cho h\u00e1\u00bb\u008dc vi\u00c3\u00aan. \n\nTr\u00c3\u00aan tay b\u00e1\u00ba\u00a1n l\u00c3\u00a0 B\u00e1\u00ba\u00a3ng kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t ng\u00e1\u00ba\u00afn nh\u00e1\u00ba\u00b1m gi\u00c3\u00bap TDC hi\u00e1\u00bb\u0083u h\u00c6\u00a1n v\u00e1\u00bb\u0081 nh\u00e1\u00bb\u00afng kh\u00c3\u00b3 kh\u00c4\u0083n c\u00e1\u00bb\u00a7a ng\u00c6\u00b0\u00e1\u00bb\u009di h\u00e1\u00bb\u008dc v\u00c3\u00a0 l\u00c3\u00a0m Design t\u00e1\u00ba\u00a1i Vi\u00e1\u00bb\u0087t Nam. V\u00c3\u00a0 ch\u00c3\u00adnh B\u00e1\u00ba\u00a1n - h\u00e1\u00bb\u008dc vi\u00c3\u00aan/c\u00e1\u00bb\u00b1u h\u00e1\u00bb\u008dc vi\u00c3\u00aan c\u00e1\u00bb\u00a7a TDC s\u00e1\u00ba\u00bd gi\u00c3\u00bap cho b\u00e1\u00ba\u00a3ng kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t mang v\u00e1\u00bb\u0081 nh\u00e1\u00bb\u00afng th\u00c3\u00b4ng tin gi\u00c3\u00a1 tr\u00e1\u00bb\u008b nh\u00e1\u00ba\u00a5t.\n\nTDC r\u00e1\u00ba\u00a5t mong nh\u00e1\u00ba\u00adn \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c k\u00e1\u00ba\u00bft qu\u00e1\u00ba\u00a3 kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t c\u00e1\u00bb\u00a7a b\u00e1\u00ba\u00a1n.\n\nLink Kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t: https://forms.gle/EYBBgrfoo2efkZdWA",
+      "share": {
+        "link": "https://forms.gle/EYBBgrfoo2efkZdWA",
+        "share_text": "Ch\u00c3\u00a0o B\u00e1\u00ba\u00a1n, Tr\u00c3\u00aan tay b\u00e1\u00ba\u00a1n l\u00c3\u00a0 B\u00e1\u00ba\u00a3ng kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t ng\u00e1\u00ba\u00afn nh\u00e1\u00ba\u00b1m gi\u00c3\u00bap TDC hi\u00e1\u00bb\u0083u h\u00c6\u00a1n v\u00e1\u00bb\u0081 nh\u00e1\u00bb\u00afng kh\u00c3\u00b3 kh\u00c4\u0083n c\u00e1\u00bb\u00a7a ng\u00c6\u00b0\u00e1\u00bb\u009di h\u00e1\u00bb\u008dc v\u00c3\u00a0 l\u00c3\u00a0m Design t\u00e1\u00ba\u00a1i Vi\u00e1\u00bb\u0087t Nam. V\u00c3\u00a0 ch\u00c3\u00adnh B\u00e1\u00ba\u00a1n - h\u00e1\u00bb\u008dc vi\u00c3\u00aan/c\u00e1\u00bb\u00b1u h\u00e1\u00bb\u008dc vi\u00c3\u00aan c\u00e1\u00bb\u00a7a TDC s\u00e1\u00ba\u00bd gi\u00c3\u00bap cho b\u00e1\u00ba\u00a3ng kh\u00e1\u00ba\u00a3o s\u00c3\u00a1t mang v\u00e1\u00bb\u0081 nh\u00e1\u00bb\u00afng th\u00c3\u00b4ng tin gi\u00c3\u00a1 tr\u00e1\u00bb\u008b ..."
+      },
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1722223228720,
+      "content": "D\u00e1\u00ba\u00a1 v\u00c3\u00a2ng \u00c4\u0091\u00c3\u00bang r\u00e1\u00bb\u0093i \u00e1\u00ba\u00a1 v\u00c3\u00ac h\u00c3\u00acnh th\u00e1\u00bb\u00a9c h\u00e1\u00bb\u008dc k\u00c3\u00a8m 1-1 Booking l\u00c3\u00a0 h\u00e1\u00bb\u008dc qua video record n\u00c3\u00aan b\u00e1\u00ba\u00a1n c\u00c3\u00b3 th\u00e1\u00bb\u0083 ch\u00e1\u00bb\u00a7 \u00c4\u0091\u00e1\u00bb\u0099ng h\u00e1\u00bb\u008dc theo th\u00e1\u00bb\u009di gian r\u00e1\u00ba\u00a3nh c\u00e1\u00bb\u00a7a b\u00e1\u00ba\u00a1n nh\u00c3\u00a9",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1722080182400,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1722080181399,
+      "content": "d\u00e1\u00ba\u00a1 v\u00e1\u00ba\u00ady b\u00e1\u00ba\u00aft \u00c4\u0091\u00e1\u00ba\u00a7u h\u00e1\u00bb\u008dc t\u00e1\u00bb\u00ab khi n\u00c3\u00a0o l\u00c3\u00a0 theo l\u00e1\u00bb\u008bch em \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c ch\u00e1\u00bb\u008dn \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1721911501429,
+      "content": "D\u00e1\u00ba\u00a1 b\u00c3\u00a2y gi\u00e1\u00bb\u009d b\u00e1\u00ba\u00a1n khi b\u00e1\u00ba\u00a1n tham gia l\u00e1\u00ba\u00a1i ti\u00e1\u00ba\u00bfn tr\u00c3\u00acnh h\u00e1\u00bb\u008dc t\u00e1\u00ba\u00adp m\u00c3\u00b4n LS th\u00c3\u00ac b\u00e1\u00ba\u00a1n s\u00e1\u00ba\u00bd h\u00e1\u00bb\u008dc d\u00c6\u00b0\u00e1\u00bb\u009bi h\u00c3\u00acnh th\u00e1\u00bb\u00a9c h\u00e1\u00bb\u008dc k\u00c3\u00a8m 1-1 Booking nh\u00c3\u00a9 b\u00e1\u00ba\u00a1n",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1721909129728,
+      "content": "d\u00e1\u00ba\u00a1 email l\u00c3\u00a0 fordnguyen2412@gmail.com \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1721909101129,
+      "content": "D\u00e1\u00ba\u00a1 b\u00e1\u00ba\u00a1n cho m\u00c3\u00acnh xin email \u00c4\u0091\u00e1\u00bb\u0083 m\u00c3\u00acnh ki\u00e1\u00bb\u0083m tra cho b\u00e1\u00ba\u00a1n nh\u00c3\u00a9",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1721905592301,
+      "content": "cho em h\u00e1\u00bb\u008fi l\u00c3\u00a0 b\u00c3\u00a2y gi\u00e1\u00bb\u009d n\u00e1\u00ba\u00bfu em mu\u00e1\u00bb\u0091n h\u00e1\u00bb\u008dc l\u00e1\u00ba\u00a1i th\u00c3\u00ac \u00c4\u0091\u00e1\u00bb\u00a3i kh\u00c3\u00b3a ti\u00e1\u00ba\u00bfp theo hay th\u00e1\u00bb\u009di gian h\u00e1\u00bb\u008dc ph\u00e1\u00bb\u00a5 thu\u00e1\u00bb\u0099c v\u00c3\u00a0o em \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1721905553656,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, c\u00e1\u00ba\u00a3m \u00c6\u00a1n b\u00e1\u00ba\u00a1n \u00c4\u0091\u00c3\u00a3 li\u00c3\u00aan h\u00e1\u00bb\u0087 TDC.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Ford Nguyen",
+      "timestamp_ms": 1721905552911,
+      "content": "ad \u00c6\u00a1i em l\u00c3\u00a0 hs kh\u00c3\u00b3a LS3 c\u00c5\u00a9 \u00c4\u0091\u00c3\u00a3 b\u00e1\u00ba\u00a3o l\u00c6\u00b0u \u00c3\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Ford Nguyen",
+  "is_still_participant": false,
+  "thread_path": "inbox/fordnguyen_3444105669185612",
+  "magic_words": [
+    
+  ]
+}

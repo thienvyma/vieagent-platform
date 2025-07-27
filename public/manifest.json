@@ -1,0 +1,214 @@
+{
+  "name": "VIEAgent",
+  "short_name": "VIEAgent",
+  "description": "VIEAgent - AI Agent Platform for Vietnamese Users",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "business",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/images/vieagent-logo-small.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/vieagent-logo-medium.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/vieagent-logo-square.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile-1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile Chat Interface"
+    },
+    {
+      "src": "/screenshot-mobile-2.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Agent Management"
+    },
+    {
+      "src": "/screenshot-desktop-1.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Chat",
+      "short_name": "Chat",
+      "description": "Start a new conversation with AI agents",
+      "url": "/dashboard/chat",
+      "icons": [
+        {
+          "src": "/shortcut-chat.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Agents",
+      "short_name": "Agents",
+      "description": "Manage your AI agents",
+      "url": "/dashboard/agents",
+      "icons": [
+        {
+          "src": "/shortcut-agents.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Knowledge",
+      "short_name": "Knowledge",
+      "description": "Access knowledge center",
+      "url": "/dashboard/knowledge",
+      "icons": [
+        {
+          "src": "/shortcut-knowledge.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Mobile Chat",
+      "short_name": "Mobile",
+      "description": "Mobile-optimized chat interface",
+      "url": "/dashboard/chat/mobile",
+      "icons": [
+        {
+          "src": "/shortcut-mobile.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/dashboard/knowledge/upload",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": [
+            "image/*",
+            "video/*",
+            "audio/*",
+            "text/*",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          ]
+        }
+      ]
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+aiagent",
+      "url": "/dashboard/chat?agent=%s"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://your-domain.com/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "file_handlers": [
+    {
+      "action": "/dashboard/knowledge/upload",
+      "accept": {
+        "text/plain": [
+          ".txt"
+        ],
+        "text/csv": [
+          ".csv"
+        ],
+        "application/json": [
+          ".json"
+        ],
+        "application/pdf": [
+          ".pdf"
+        ],
+        "application/msword": [
+          ".doc"
+        ],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+          ".docx"
+        ],
+        "image/*": [
+          ".png",
+          ".jpg",
+          ".jpeg",
+          ".gif",
+          ".webp",
+          ".svg"
+        ],
+        "video/*": [
+          ".mp4",
+          ".webm",
+          ".ogg"
+        ],
+        "audio/*": [
+          ".mp3",
+          ".wav",
+          ".ogg",
+          ".m4a"
+        ]
+      }
+    }
+  ],
+  "handle_links": "preferred",
+  "capture_links": "existing-client-navigate",
+  "scope_extensions": [
+    {
+      "origin": "https://your-domain.com"
+    }
+  ],
+  "id": "VIEAgent",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7"
+}

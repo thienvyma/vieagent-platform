@@ -1,0 +1,191 @@
+{
+  "timestamp": "2025-06-24T17:55:02.928Z",
+  "database": {
+    "connected": false,
+    "stats": {
+      "users": 3,
+      "agents": 6,
+      "conversations": 1,
+      "documents": 5,
+      "subscriptions": 0,
+      "plans": 1,
+      "totalRecords": 16
+    },
+    "issues": [
+      "Connection failed: \nInvalid `prisma.agent.count()` invocation in\nD:\\CusorWepApp\\ai-agent-platform\\scripts\\system-health-check.ts:85:53\n\n  82   where: { profile: null }\n  83 });\n  84 \n→ 85 const agentsWithoutOwner = await prisma.agent.count({\n       select: {\n         _count: {\n           select: {\n             _all: true\n           }\n         }\n       },\n       where: {\n     +   user: {\n     +     is: UserWhereInput,\n     +     isNot: UserWhereInput\n     +   }\n       }\n     })\n\nArgument `user` must not be null."
+    ]
+  },
+  "fileSystem": {
+    "coreFiles": [
+      {
+        "file": "src/app/layout.tsx",
+        "exists": true,
+        "size": 1730
+      },
+      {
+        "file": "src/app/page.tsx",
+        "exists": true,
+        "size": 23152
+      },
+      {
+        "file": "src/app/login/page.tsx",
+        "exists": true,
+        "size": 7667
+      },
+      {
+        "file": "src/app/dashboard/page.tsx",
+        "exists": true,
+        "size": 18365
+      },
+      {
+        "file": "src/app/admin/page.tsx",
+        "exists": true,
+        "size": 25002
+      },
+      {
+        "file": "src/lib/auth.ts",
+        "exists": true,
+        "size": 2186
+      },
+      {
+        "file": "src/lib/prisma.ts",
+        "exists": true,
+        "size": 292
+      },
+      {
+        "file": "src/lib/permissions.ts",
+        "exists": true,
+        "size": 6610
+      },
+      {
+        "file": "src/middleware.ts",
+        "exists": true,
+        "size": 1508
+      },
+      {
+        "file": "prisma/schema.prisma",
+        "exists": true,
+        "size": 34049
+      },
+      {
+        "file": "package.json",
+        "exists": true,
+        "size": 1696
+      },
+      {
+        "file": ".env",
+        "exists": true,
+        "size": 148
+      }
+    ],
+    "apiRoutes": [
+      {
+        "route": "src/app/api/auth/[...nextauth]/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/user/profile/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/agents/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/admin/users/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/admin/subscriptions/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/admin/plans/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/deployment/web/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/deployment/facebook/route.ts",
+        "exists": true
+      },
+      {
+        "route": "src/app/api/deployment/zalo/route.ts",
+        "exists": true
+      }
+    ],
+    "pageRoutes": [
+      {
+        "route": "src/app/dashboard/agents/page.tsx",
+        "exists": true
+      },
+      {
+        "route": "src/app/dashboard/deployment/page.tsx",
+        "exists": true
+      },
+      {
+        "route": "src/app/admin/users/page.tsx",
+        "exists": true
+      },
+      {
+        "route": "src/app/admin/subscriptions/page.tsx",
+        "exists": true
+      },
+      {
+        "route": "src/app/admin/plans/page.tsx",
+        "exists": true
+      }
+    ],
+    "issues": []
+  },
+  "integrations": {
+    "authSystem": {
+      "configured": true,
+      "issues": []
+    },
+    "permissions": {
+      "configured": true,
+      "issues": []
+    },
+    "middleware": {
+      "configured": true,
+      "issues": []
+    }
+  },
+  "navigation": {
+    "flows": [
+      {
+        "flow": "Landing Page → Login → Dashboard/Admin",
+        "working": true,
+        "issues": []
+      },
+      {
+        "flow": "Dashboard → Agent Management",
+        "working": true,
+        "issues": []
+      },
+      {
+        "flow": "Admin → User Management",
+        "working": true,
+        "issues": []
+      },
+      {
+        "flow": "Dashboard → Deployment",
+        "working": true,
+        "issues": []
+      }
+    ]
+  },
+  "overall": {
+    "status": "warning",
+    "score": 70,
+    "recommendations": [
+      "Fix database connection",
+      "Run npm run build to verify compilation",
+      "Start dev server with npm run dev",
+      "Test authentication flow manually"
+    ]
+  }
+}

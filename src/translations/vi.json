@@ -1,0 +1,138 @@
+{
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "loading": "Đang tải...",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "confirm": "Xác nhận",
+    "close": "Đóng",
+    "open": "Mở",
+    "create": "Tạo",
+    "update": "Cập nhật",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "sort": "Sắp xếp",
+    "export": "Xuất",
+    "import": "Nhập",
+    "refresh": "Làm mới",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "finish": "Hoàn thành",
+    "back": "Quay lại"
+  },
+  "navigation": {
+    "dashboard": "Bảng điều khiển",
+    "agents": "Quản lý Agent",
+    "chat": "Trò chuyện",
+    "knowledge": "Kiến thức",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất",
+    "profile": "Hồ sơ",
+    "analytics": "Phân tích",
+    "deployment": "Triển khai",
+    "monitoring": "Giám sát"
+  },
+  "agent": {
+    "create": "Tạo Agent",
+    "name": "Tên Agent",
+    "description": "Mô tả",
+    "model": "Mô hình AI",
+    "temperature": "Nhiệt độ",
+    "maxTokens": "Số token tối đa",
+    "systemPrompt": "Lời nhắc hệ thống",
+    "status": "Trạng thái",
+    "category": "Danh mục",
+    "tags": "Thẻ",
+    "isPublic": "Công khai",
+    "configuration": "Cấu hình",
+    "performance": "Hiệu suất",
+    "conversations": "Cuộc trò chuyện",
+    "wizard": {
+      "title": "Trình hướng dẫn tạo Agent",
+      "step1": "Chọn mẫu",
+      "step2": "Thông tin cơ bản",
+      "step3": "Cấu hình AI",
+      "step4": "Cấu hình RAG",
+      "step5": "Học tự động",
+      "step6": "Tích hợp",
+      "step7": "Cài đặt nâng cao",
+      "selectTemplate": "Chọn mẫu Agent",
+      "basicInfo": "Thông tin cơ bản",
+      "aiConfig": "Cấu hình AI",
+      "ragConfig": "Cấu hình RAG",
+      "learningConfig": "Học tự động",
+      "integrationConfig": "Tích hợp",
+      "advancedConfig": "Cài đặt nâng cao"
+    }
+  },
+  "chat": {
+    "sendMessage": "Gửi tin nhắn",
+    "typing": "Đang gõ...",
+    "selectAgent": "Chọn Agent",
+    "newConversation": "Cuộc trò chuyện mới",
+    "messageHistory": "Lịch sử tin nhắn",
+    "placeholder": "Nhập tin nhắn của bạn...",
+    "connecting": "Đang kết nối...",
+    "connected": "Đã kết nối",
+    "disconnected": "Mất kết nối"
+  },
+  "settings": {
+    "profile": "Hồ sơ",
+    "language": "Ngôn ngữ",
+    "theme": "Giao diện",
+    "notifications": "Thông báo",
+    "privacy": "Quyền riêng tư",
+    "security": "Bảo mật",
+    "preferences": "Tùy chọn",
+    "account": "Tài khoản",
+    "billing": "Thanh toán",
+    "apiKeys": "Khóa API"
+  },
+  "forms": {
+    "required": "Bắt buộc",
+    "optional": "Tùy chọn",
+    "validation": {
+      "required": "Trường này là bắt buộc",
+      "email": "Email không hợp lệ",
+      "minLength": "Tối thiểu {{min}} ký tự",
+      "maxLength": "Tối đa {{max}} ký tự",
+      "numeric": "Chỉ được nhập số"
+    }
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "register": "Đăng ký",
+    "forgotPassword": "Quên mật khẩu",
+    "resetPassword": "Đặt lại mật khẩu",
+    "changePassword": "Đổi mật khẩu",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Xác nhận mật khẩu"
+  },
+  "status": {
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "pending": "Đang chờ",
+    "completed": "Hoàn thành",
+    "failed": "Thất bại",
+    "cancelled": "Đã hủy",
+    "processing": "Đang xử lý"
+  },
+  "dashboard": {
+    "welcome": "Chào mừng trở lại",
+    "overview": "Tổng quan",
+    "quickActions": "Hành động nhanh",
+    "recentActivity": "Hoạt động gần đây",
+    "statistics": "Thống kê"
+  },
+  "language": {
+    "vietnamese": "Tiếng Việt",
+    "english": "English",
+    "switchLanguage": "Chuyển ngôn ngữ",
+    "currentLanguage": "Ngôn ngữ hiện tại"
+  }
+} 

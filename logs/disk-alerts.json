@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1752594151375,
+    "level": "OK",
+    "message": "Disk usage normal.",
+    "diskInfo": {
+      "currentUsage": 295.84793853759766,
+      "totalCapacity": 476.19530868530273,
+      "freeSpace": 180.34737014770508,
+      "usagePercentage": 62.12743660881191,
+      "platform": "Windows"
+    },
+    "testAlert": true,
+    "timestamp": "2025-07-15T15:42:31.375Z"
+  }
+]

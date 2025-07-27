@@ -1,0 +1,63 @@
+{
+  "summary": {
+    "totalTests": 7,
+    "passedTests": 3,
+    "failedTests": 4,
+    "successRate": 42.857142857142854,
+    "duration": 9,
+    "timestamp": "2025-07-11T17:13:27.678Z"
+  },
+  "tests": [
+    {
+      "name": "ChromaDB Production Service - Overall",
+      "passed": false,
+      "details": "Cannot find module 'D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\src\\lib\\chromadb-production.js' imported from D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\test-day14-validation.js",
+      "timestamp": "2025-07-11T17:13:27.672Z"
+    },
+    {
+      "name": "Collection Manager - Overall",
+      "passed": false,
+      "details": "Cannot find module 'D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\src\\lib\\collection-manager.js' imported from D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\test-day14-validation.js",
+      "timestamp": "2025-07-11T17:13:27.674Z"
+    },
+    {
+      "name": "Vector Service - Overall",
+      "passed": false,
+      "details": "Cannot find module 'D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\src\\lib\\vector-knowledge-service-production.js' imported from D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\test-day14-validation.js",
+      "timestamp": "2025-07-11T17:13:27.675Z"
+    },
+    {
+      "name": "Pipeline Bridge - Overall",
+      "passed": false,
+      "details": "Cannot find module 'D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\src\\lib\\knowledge-pipeline-bridge.js' imported from D:\\backup\\CusorWepApp - Copy\\ai-agent-platform\\test-day14-validation.js",
+      "timestamp": "2025-07-11T17:13:27.677Z"
+    },
+    {
+      "name": "API Endpoints - Import Check",
+      "passed": true,
+      "details": "API endpoints are available for testing",
+      "timestamp": "2025-07-11T17:13:27.677Z"
+    },
+    {
+      "name": "Integration Flow - Component Connectivity",
+      "passed": true,
+      "details": "All components are properly connected",
+      "timestamp": "2025-07-11T17:13:27.677Z"
+    },
+    {
+      "name": "Integration Flow - Production Readiness",
+      "passed": true,
+      "details": "System is ready for production RAG implementation",
+      "timestamp": "2025-07-11T17:13:27.677Z"
+    }
+  ],
+  "config": {
+    "userId": "test-user-day14",
+    "agentId": "test-agent-day14",
+    "testFile": "test-day14-document.txt",
+    "testContent": "\n    This is a test document for Day 14 RAG System Integration testing.\n    \n    Key features being tested:\n    1. ChromaDB Production Setup - Persistent storage and server connection\n    2. Collection Manager - User-specific collection creation and naming\n    3. Vector Knowledge Service - Document processing with embeddings\n    4. Pipeline Bridge - Integration with existing knowledge upload system\n    \n    The system should be able to:\n    - Create user-specific collections\n    - Process documents into chunks\n    - Generate embeddings for each chunk\n    - Store vectors in ChromaDB\n    - Retrieve similar content through search\n    \n    This test validates the complete RAG pipeline integration.\n  ",
+    "expectedMinChunks": 2,
+    "expectedMinVectors": 2,
+    "searchQuery": "ChromaDB production setup"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-07-09T18:12:39.279Z",
+  "chromadb_mode": "in-memory",
+  "summary": {
+    "total_tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "success_rate": "0.0"
+  },
+  "results": [
+    {
+      "step": "Component Integration",
+      "success": false,
+      "error": "Failed to connect to chromadb. Make sure your server is running and try again. If you are running from a browser, make sure that your chromadb instance is configured to allow requests from the current origin using the CHROMA_SERVER_CORS_ALLOW_ORIGINS environment variable.",
+      "performance": {
+        "duration_ms": 1491
+      }
+    }
+  ],
+  "performance_metrics": {}
+}

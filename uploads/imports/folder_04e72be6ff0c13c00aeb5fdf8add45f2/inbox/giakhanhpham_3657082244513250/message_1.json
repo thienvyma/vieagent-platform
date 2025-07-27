@@ -1,0 +1,25 @@
+{
+  "participants": [
+    {
+      "name": "Gia Khanh Pham"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1719460252820,
+      "content": "TDC s\u00e1\u00ba\u00afp khai gi\u00e1\u00ba\u00a3ng l\u00e1\u00bb\u009bp Logo Design v\u00c3\u00a0o ng\u00c3\u00a0y 27.07.2024\nKh\u00c3\u00b4ng bi\u00e1\u00ba\u00bft b\u00e1\u00ba\u00a1n c\u00c3\u00b2n quan t\u00c3\u00a2m \u00c4\u0091\u00e1\u00ba\u00bfn tham gia m\u00c3\u00b4n h\u00e1\u00bb\u008dc n\u00c3\u00a0y kh\u00c3\u00b4ng \u00e1\u00ba\u00a1?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Gia Khanh Pham",
+  "is_still_participant": false,
+  "thread_path": "inbox/giakhanhpham_3657082244513250",
+  "magic_words": [
+    
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "participants": [
+    {
+      "name": "Bach Duy"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "Bach Duy",
+      "timestamp_ms": 1747825435621,
+      "content": "0393493494",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "Bach Duy",
+      "timestamp_ms": 1747825419818,
+      "content": "C\u00c3\u00b3 ch\u00c6\u00b0\u00c6\u00a1ng tr\u00c3\u00acnh tr\u00e1\u00ba\u00a3 g\u00c3\u00b3p cho g\u00c3\u00b3i Foundation kh\u00c3\u00b4ng?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1747825418868,
+      "content": "Hi Bach! H\u00c3\u00a3y \u00c4\u0091\u00e1\u00ba\u00b7t c\u00c3\u00a2u h\u00e1\u00bb\u008fi cho TDC nh\u00c3\u00a9!",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1747825417850,
+      "content": "Bach Duy \u00c4\u0091\u00c3\u00a3 tr\u00e1\u00ba\u00a3 l\u00e1\u00bb\u009di tin nh\u00e1\u00ba\u00afn ch\u00c3\u00a0o m\u00e1\u00bb\u00abng t\u00e1\u00bb\u00b1 \u00c4\u0091\u00e1\u00bb\u0099ng c\u00e1\u00bb\u00a7a b\u00e1\u00ba\u00a1n. \u00c4\u0090\u00e1\u00bb\u0083 thay \u00c4\u0091\u00e1\u00bb\u0095i ho\u00e1\u00ba\u00b7c g\u00e1\u00bb\u00a1 l\u00e1\u00bb\u009di ch\u00c3\u00a0o n\u00c3\u00a0y, h\u00c3\u00a3y truy c\u00e1\u00ba\u00adp ph\u00e1\u00ba\u00a7n C\u00c3\u00a0i \u00c4\u0091\u00e1\u00ba\u00b7t tin nh\u00e1\u00ba\u00afn.",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "Bach Duy",
+  "is_still_participant": false,
+  "thread_path": "inbox/bachduy_1443085860385454",
+  "magic_words": [
+    
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "metrics": {
+    "responseTime": {
+      "enabled": true,
+      "threshold": 2000
+    },
+    "databaseQueries": {
+      "enabled": true,
+      "threshold": 100
+    },
+    "memoryUsage": {
+      "enabled": true,
+      "threshold": 512
+    },
+    "cpuUsage": {
+      "enabled": true,
+      "threshold": 80
+    }
+  },
+  "alerts": {
+    "email": "admin@example.com",
+    "slack": null
+  },
+  "retention": {
+    "metrics": "30d",
+    "logs": "7d",
+    "traces": "24h"
+  }
+}

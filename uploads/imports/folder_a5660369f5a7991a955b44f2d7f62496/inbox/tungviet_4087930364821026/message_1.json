@@ -1,0 +1,82 @@
+{
+  "participants": [
+    {
+      "name": "T\u00c3\u00b9ng Vi\u00e1\u00bb\u0087t"
+    },
+    {
+      "name": "The Design Council"
+    }
+  ],
+  "messages": [
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1741653072979,
+      "content": "Ch\u00c3\u00a0o b\u00e1\u00ba\u00a1n, kh\u00c3\u00b4ng bi\u00e1\u00ba\u00bft b\u00e1\u00ba\u00a1n c\u00c3\u00b3 b\u00e1\u00bb\u008b miss tin nh\u00e1\u00ba\u00afn c\u00e1\u00bb\u00a7a TDC kh\u00c3\u00b4ng \u00e1\u00ba\u00a1?",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1741423836636,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1741423836361,
+      "content": "The Design Council mu\u00e1\u00bb\u0091n g\u00e1\u00bb\u00adi th\u00c3\u00b4ng tin m\u00e1\u00bb\u009bi cho b\u00e1\u00ba\u00a1n. \u00c4\u0090\u00c3\u00b3 c\u00c3\u00b3 th\u00e1\u00bb\u0083 l\u00c3\u00a0 n\u00e1\u00bb\u0099i dung qu\u00e1\u00ba\u00a3ng c\u00c3\u00a1o. T\u00c3\u00acm hi\u00e1\u00bb\u0083u th\u00c3\u00aam(https://www.facebook.com/help/messenger-app/564030381383143)",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1741423834822,
+      "content": "T\u00c3\u00b9ngTDC xin thay l\u00e1\u00bb\u009di c\u00e1\u00ba\u00a3m \u00c6\u00a1n \u00c4\u0091\u00e1\u00ba\u00bfn t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c b\u00e1\u00ba\u00a1n h\u00e1\u00bb\u008dc vi\u00c3\u00aan v\u00c3\u00a0 nh\u00e1\u00bb\u00afng ng\u00c6\u00b0\u00e1\u00bb\u009di \u00c4\u0091\u00c3\u00a3 lu\u00c3\u00b4n theo d\u00c3\u00b5i, quan t\u00c3\u00a2m \u00e1\u00bb\u00a7ng h\u00e1\u00bb\u0099 \u00c4\u0091\u00e1\u00ba\u00bfn TDC trong su\u00e1\u00bb\u0091t n\u00c4\u0083m 2024 v\u00e1\u00bb\u00aba qua b\u00e1\u00ba\u00b1ng ch\u00c6\u00b0\u00c6\u00a1ng tr\u00c3\u00acnh \u00c6\u00b0u \u00c4\u0091\u00c3\u00a3i - gi\u00e1\u00ba\u00a3m gi\u00c3\u00a1 tr\u00e1\u00bb\u00b1c ti\u00e1\u00ba\u00bfp 20% cho t\u00e1\u00ba\u00a5t c\u00e1\u00ba\u00a3 c\u00c3\u00a1c g\u00c3\u00b3i Membership",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1741252156848,
+      "content": "Trong Kho\u00c3\u00a1 UI, ngo\u00c3\u00a0i vi\u00e1\u00bb\u0087c b\u00e1\u00ba\u00a1n s\u00e1\u00ba\u00bd \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c h\u00e1\u00bb\u008dc to\u00c3\u00a0n di\u00e1\u00bb\u0087n v\u00e1\u00bb\u0081 c\u00c3\u00b4ng c\u00e1\u00bb\u00a5 Figma (v\u00e1\u00bb\u0091n l\u00c3\u00a0 m\u00e1\u00bb\u0099t c\u00c3\u00b4ng c\u00e1\u00bb\u00a5 \u00e1\u00bb\u00a9ng d\u00e1\u00bb\u00a5ng r\u00e1\u00ba\u00a5t l\u00e1\u00bb\u009bn kh\u00c3\u00b4ng ch\u00e1\u00bb\u0089 l\u00c3\u00a0m Ui Layout web, m\u00c3\u00a0 c\u00c3\u00b2n \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c t\u00c3\u00adch h\u00e1\u00bb\u00a3p \u00c4\u0091\u00e1\u00bb\u0083 Collaborating, d\u00c3\u00a0n Layout cho Presentation.)\n\nNgo\u00c3\u00a0i ra, Kho\u00c3\u00a1 UI Design Starter n\u00c3\u00a0y c\u00c3\u00b3 d\u00e1\u00ba\u00a1y th\u00c3\u00aam t\u00c6\u00b0 duy v\u00e1\u00bb\u0081 m\u00e1\u00bb\u0099t Design System, t\u00e1\u00bb\u00a9c s\u00e1\u00bb\u00b1 li\u00c3\u00aan k\u00e1\u00ba\u00bft v\u00c3\u00a0 l\u00c3\u00a0m ch\u00e1\u00bb\u00a7 component gi\u00e1\u00bb\u00afa c\u00c3\u00a1c Giao di\u00e1\u00bb\u0087n v\u00e1\u00bb\u009bi nhau.\n\nC\u00c3\u00b3 m\u00e1\u00bb\u0099t k\u00e1\u00bb\u00b9 n\u00c4\u0083ng m\u00c3\u00a0 TDC khuy\u00e1\u00ba\u00bfn kh\u00c3\u00adch b\u00e1\u00ba\u00a1n join kho\u00c3\u00a1 n\u00c3\u00a0y n\u00e1\u00ba\u00bfu b\u00e1\u00ba\u00a1n mu\u00e1\u00bb\u0091n chuy\u00e1\u00bb\u0083n h\u00c6\u00b0\u00e1\u00bb\u009bng sang l\u00c3\u00a0m Product Design, v\u00c3\u00ac ch\u00e1\u00ba\u00afc ch\u00e1\u00ba\u00afn l\u00c3\u00a0m UI, s\u00e1\u00ba\u00bd th\u00e1\u00bb\u00b1c hi\u00e1\u00bb\u0087n Responsive gi\u00e1\u00bb\u00afa c\u00c3\u00a1c m\u00c3\u00a0n h\u00c3\u00acnh. Th\u00e1\u00bb\u00b1c h\u00c3\u00a0nh Responsive s\u00e1\u00ba\u00bd v\u00e1\u00ba\u00adn d\u00e1\u00bb\u00a5ng kh\u00c3\u00a1 t\u00e1\u00bb\u0091t Layout h\u00c6\u00a1n nh\u00c3\u00a9 <3",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "The Design Council",
+      "timestamp_ms": 1741252147038,
+      "content": "M\u00c3\u00acnh g\u00e1\u00bb\u00adi b\u00e1\u00ba\u00a1n th\u00c3\u00b4ng tin chi ti\u00e1\u00ba\u00bft v\u00e1\u00bb\u0081 l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc c\u00c5\u00a9ng nh\u00c6\u00b0 h\u00e1\u00bb\u008dc ph\u00c3\u00ad t\u00e1\u00ba\u00a1i \u00c4\u0091\u00c3\u00a2y \u00e1\u00ba\u00a1\n\nhttps://www.thedesigncouncil.vn/uif-class\n\nHi\u00e1\u00bb\u0087n t\u00e1\u00ba\u00a1i l\u00e1\u00bb\u009bp UI Design Starter \u00c4\u0091ang m\u00e1\u00bb\u009f ghi danh l\u00e1\u00bb\u009bp h\u00e1\u00bb\u008dc coaching 1-1 \u00e1\u00ba\u00a1.",
+      "share": {
+        "link": "https://www.thedesigncouncil.vn/uif-class",
+        "share_text": "UI Design Starter (Figma to\u00c3\u00a0n di\u00e1\u00bb\u0087n)UIF - (Coaching 1:1) Ph\u00c6\u00b0\u00c6\u00a1ng ph\u00c3\u00a1p Mentor \u00c4\u0091\u00e1\u00bb\u0093ng h\u00c3\u00a0nh 1:1 c\u00c3\u00b9ng h\u00e1\u00bb\u008dc vi\u00c3\u00aan trong su\u00e1\u00bb\u0091t kho\u00c3\u00a1 h\u00e1\u00bb\u008dc (th\u00e1\u00bb\u009di l\u00c6\u00b0\u00e1\u00bb\u00a3ng coaching trung b\u00c3\u00acnh 4 th\u00c3\u00a1ng/m\u00c3\u00b4n h\u00e1\u00bb\u008dc)Gi\u00c3\u00a1o tr\u00c3\u00acnh v\u00c3\u00a0 L\u00e1\u00bb\u008bch h\u00e1\u00bb\u008dc \u00c4\u0091\u00c6\u00b0\u00e1\u00bb\u00a3c c\u00c3\u00a1 nh\u00c3\u00a2n ho\u00c3\u00a1 linh ho\u00e1\u00ba\u00a1t theo t\u00e1\u00bb\u00abng nhu c\u00e1\u00ba\u00a7u ri\u00c3\u00aang bi\u00e1\u00bb\u0087..."
+      },
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "T\u00c3\u00b9ng Vi\u00e1\u00bb\u0087t",
+      "timestamp_ms": 1741251021492,
+      "content": "Cho em h\u00e1\u00bb\u008fi kho\u00c3\u00a1 h\u00e1\u00bb\u008dc n\u00c3\u00a0y \u00e1\u00ba\u00a1",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    },
+    {
+      "sender_name": "T\u00c3\u00b9ng Vi\u00e1\u00bb\u0087t",
+      "timestamp_ms": 1741251017974,
+      "photos": [
+        {
+          "uri": "this_profile's_activity_across_facebook/messages/inbox/tungviet_4087930364821026/photos/476482663_1697276067857301_1388257088300825022_n_1697276064523968.jpg",
+          "creation_timestamp": 1741251015
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ],
+  "title": "T\u00c3\u00b9ng Vi\u00e1\u00bb\u0087t",
+  "is_still_participant": false,
+  "thread_path": "inbox/tungviet_4087930364821026",
+  "magic_words": [
+    
+  ]
+}

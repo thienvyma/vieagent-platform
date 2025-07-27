@@ -1,0 +1,73 @@
+{
+  "version": 2,
+  "name": "ai-agent-platform",
+  "regions": ["sin1", "iad1"],
+  "functions": {
+    "src/app/api/*/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/knowledge/*/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/agents/*/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/webhook/*/route.ts": {
+      "maxDuration": 5
+    }
+  },
+  "env": {
+    "NODE_ENV": "production",
+    "DEPLOYMENT_PLATFORM": "vercel",
+    "DEPLOYMENT_TIER": "free"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, Content-Type, Authorization"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/webhooks/stripe",
+      "destination": "/api/payments/webhook"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "/dashboard/admin",
+      "permanent": true
+    }
+  ]
+} 
